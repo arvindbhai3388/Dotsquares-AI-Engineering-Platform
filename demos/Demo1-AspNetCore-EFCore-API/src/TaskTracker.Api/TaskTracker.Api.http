@@ -1,0 +1,43 @@
+@TaskTracker.Api_HostAddress = http://localhost:5248
+
+### Create a project
+POST {{TaskTracker.Api_HostAddress}}/api/projects
+Content-Type: application/json
+
+{
+  "name": "Website Revamp",
+  "description": "Redesign the marketing site"
+}
+
+### List projects (paginated)
+GET {{TaskTracker.Api_HostAddress}}/api/projects?pageNumber=1&pageSize=10
+Accept: application/json
+
+### Get a project by id
+GET {{TaskTracker.Api_HostAddress}}/api/projects/1
+Accept: application/json
+
+### Create a task under a project
+POST {{TaskTracker.Api_HostAddress}}/api/projects/1/tasks
+Content-Type: application/json
+
+{
+  "title": "Design homepage mockup",
+  "description": "Initial concept for stakeholder review",
+  "dueDate": "2026-09-01T00:00:00Z"
+}
+
+### List tasks for a project (paginated)
+GET {{TaskTracker.Api_HostAddress}}/api/projects/1/tasks?pageNumber=1&pageSize=10
+Accept: application/json
+
+### Update a task's status (broadcasts TaskStatusChanged over SignalR)
+PATCH {{TaskTracker.Api_HostAddress}}/api/tasks/1/status
+Content-Type: application/json
+
+{
+  "status": "InProgress"
+}
+
+### Delete a task
+DELETE {{TaskTracker.Api_HostAddress}}/api/tasks/1

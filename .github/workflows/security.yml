@@ -1,0 +1,63 @@
+name: Security
+
+# Lightweight security scanning: secret detection across the repo, plus a known-vulnerable
+# NuGet package check for each of the 3 demo solutions. This is an internal Dotsquares repo
+# (see LICENSE) — the goal here is basic hygiene, not a full SCA/SAST pipeline.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  schedule:
+    # Every Monday at 03:00 UTC.
+    - cron: "0 3 * * 1"
+
+jobs:
+  secret-scan:
+    name: Secret scan (gitleaks)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          # gitleaks scans commit history, not just the working tree.
+          fetch-depth: 0
+
+      # Basic scanning with gitleaks' default ruleset needs no license or config file.
+      # A GITLEAKS_LICENSE secret would only be required to unlock the org-wide/licensed
+      # features (e.g. the hosted Gitleaks Enterprise dashboard) — not needed here.
+      - name: Run gitleaks
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  dotnet-vulnerable-packages:
+    name: Vulnerable packages — ${{ matrix.demo.name }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        demo:
+          - name: Demo1-AspNetCore-EFCore-API
+            solution: demos/Demo1-AspNetCore-EFCore-API/Demo1-AspNetCore-EFCore-API.sln
+          - name: Demo2-Blazor-SignalR-Dashboard
+            solution: demos/Demo2-Blazor-SignalR-Dashboard/Demo2-Blazor-SignalR-Dashboard.sln
+          - name: Demo3-MVC-PowerPlatform-Integration
+            solution: demos/Demo3-MVC-PowerPlatform-Integration/Demo3-MVC-PowerPlatform-Integration.sln
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "8.0.417"
+
+      # `dotnet list package --vulnerable` needs the packages already restored.
+      - name: Restore
+        run: dotnet restore "${{ matrix.demo.solution }}"
+
+      - name: Check for known-vulnerable NuGet packages (incl. transitive)
+        run: dotnet list "${{ matrix.demo.solution }}" package --vulnerable --include-transitive

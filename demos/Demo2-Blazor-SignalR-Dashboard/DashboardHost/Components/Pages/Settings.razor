@@ -1,0 +1,48 @@
+@page "/settings"
+@using DashboardHost.Models
+@using DashboardHost.Services
+@inject DashboardSettingsService SettingsService
+
+<PageTitle>Settings</PageTitle>
+
+<h1>Settings</h1>
+
+<p>
+    Controls how often <code>MetricsBroadcastService</code> generates and pushes a new
+    metric reading to every connected <a href="dashboard">dashboard</a> client.
+</p>
+
+<EditForm Model="_model" OnValidSubmit="HandleValidSubmit" class="settings-form">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="mb-3">
+        <label for="refreshInterval" class="form-label">Refresh interval (seconds)</label>
+        <InputNumber id="refreshInterval" class="form-control" @bind-Value="_model.RefreshIntervalSeconds" />
+        <ValidationMessage For="() => _model.RefreshIntervalSeconds" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Save</button>
+</EditForm>
+
+@if (_savedMessage is not null)
+{
+    <p class="settings-saved" role="status">@_savedMessage</p>
+}
+
+@code {
+    private readonly DashboardSettings _model = new();
+    private string? _savedMessage;
+
+    protected override void OnInitialized()
+    {
+        var current = SettingsService.Current;
+        _model.RefreshIntervalSeconds = current.RefreshIntervalSeconds;
+    }
+
+    private void HandleValidSubmit()
+    {
+        SettingsService.Update(_model);
+        _savedMessage = $"Saved. New readings will broadcast every {_model.RefreshIntervalSeconds}s.";
+    }
+}

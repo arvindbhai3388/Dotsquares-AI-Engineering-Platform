@@ -1,0 +1,67 @@
+@model DashboardViewModel
+@{
+    ViewData["Title"] = "Dashboard";
+    // camelCase to match the "powerbi-client" JS SDK's expected property casing (embedUrl, accessToken, etc.).
+    var jsonOptions = new System.Text.Json.JsonSerializerOptions
+    {
+        PropertyNamingPolicy = System.Text.Json.JsonNamingPolicy.CamelCase,
+    };
+    var prettyJsonOptions = new System.Text.Json.JsonSerializerOptions(jsonOptions) { WriteIndented = true };
+}
+
+<h1>@Model.ReportTitle</h1>
+<p class="text-muted">
+    Embedded for effective identity <strong>@Model.EffectiveIdentityUsername</strong> via
+    <code>IPowerBiEmbedService.GetEmbedTokenAsync</code>.
+</p>
+
+<div class="alert alert-info">
+    This demo's embed token/URL come from <code>MockPowerBiEmbedService</code> - they are not real
+    Power BI credentials, so the iframe below will show a Power BI error instead of a live report.
+    The JavaScript wiring (<code>powerbi-client</code>) is the same code a real embed would use;
+    only the <code>EmbedConfig</code> values are fake. See <code>Services/PowerBi/MockPowerBiEmbedService.cs</code>
+    for exactly what a real implementation would do differently.
+</div>
+
+<div id="reportContainer" style="height: 480px; border: 1px solid #dee2e6; border-radius: 4px;"></div>
+
+<details class="mt-3">
+    <summary>Raw EmbedConfig returned by IPowerBiEmbedService</summary>
+    <pre class="mt-2 p-3 bg-light border rounded"><code>@System.Text.Json.JsonSerializer.Serialize(Model.EmbedConfig, prettyJsonOptions)</code></pre>
+</details>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/powerbi-client@2.23.1/dist/powerbi.min.js"></script>
+    <script>
+        // Real Power BI JS embedding shape - see https://learn.microsoft.com/javascript/api/overview/powerbi/
+        // for the "powerbi-client" package this snippet targets.
+        (function () {
+            var embedConfigFromServer = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.EmbedConfig, jsonOptions));
+
+            if (typeof powerbi === "undefined") {
+                document.getElementById("reportContainer").innerText =
+                    "powerbi-client script did not load (no network access in this environment). " +
+                    "The embed configuration was still produced successfully by IPowerBiEmbedService - see the details panel below.";
+                return;
+            }
+
+            var models = window["powerbi-client"] ? window["powerbi-client"].models : powerbi.models;
+
+            var embedConfiguration = {
+                type: embedConfigFromServer.embedType || "report",
+                tokenType: models.TokenType.Embed,
+                accessToken: embedConfigFromServer.embedToken,
+                embedUrl: embedConfigFromServer.embedUrl,
+                id: embedConfigFromServer.reportId,
+                permissions: models.Permissions.Read,
+                settings: {
+                    panes: { filters: { expanded: false, visible: true } },
+                    background: models.BackgroundType.Transparent
+                }
+            };
+
+            var reportContainer = document.getElementById("reportContainer");
+            powerbi.embed(reportContainer, embedConfiguration);
+        })();
+    </script>
+}

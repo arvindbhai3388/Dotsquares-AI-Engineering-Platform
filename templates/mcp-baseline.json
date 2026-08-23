@@ -1,0 +1,30 @@
+{
+  "_comment": "Template .mcp.json MCP server baseline for a client project. Copy into the client repo as .mcp.json (or merge into an existing one), replace every <PLACEHOLDER> with that project's real, per-client values, and remove this _comment key before committing — it is documentation only, not a Claude Code setting. Never commit a real URL, token, or client secret in this file's place — see docs/MCP-Setup.md.",
+
+  "mcpServers": {
+    "project-tracker": {
+      "_comment": "Example remote MCP server for a Jira/Azure-DevOps-style issue tracker. Replace url/headers with the client project's actual MCP endpoint and auth scheme.",
+      "url": "<MCP_SERVER_URL>",
+      "headers": {
+        "Authorization": "Bearer <MCP_AUTH_TOKEN>"
+      }
+    },
+
+    "team-wiki": {
+      "_comment": "Example remote MCP server for a Confluence/SharePoint-wiki-style documentation source.",
+      "url": "<MCP_WIKI_SERVER_URL>",
+      "headers": {
+        "Authorization": "Bearer <MCP_WIKI_AUTH_TOKEN>"
+      }
+    },
+
+    "local-tooling": {
+      "_comment": "Example local (stdio) MCP server launched as a subprocess — no network credential needed in this file, but any token the tool itself requires should come from an environment variable, never a literal value here.",
+      "command": "<MCP_LOCAL_COMMAND>",
+      "args": ["<MCP_LOCAL_ARG_1>", "<MCP_LOCAL_ARG_2>"],
+      "env": {
+        "MCP_LOCAL_TOKEN": "<SET_VIA_ENVIRONMENT_NOT_HERE>"
+      }
+    }
+  }
+}

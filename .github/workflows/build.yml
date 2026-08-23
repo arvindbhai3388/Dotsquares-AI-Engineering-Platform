@@ -1,0 +1,50 @@
+name: Build
+
+# Builds and tests each of the 3 demo solutions independently. This platform repo has no
+# single top-level solution — see .claude/CLAUDE.md §3/§4 — so each demo is its own
+# build/test unit with its own pinned SDK (global.json).
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build-and-test:
+    name: ${{ matrix.demo.name }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        demo:
+          - name: Demo1-AspNetCore-EFCore-API
+            solution: demos/Demo1-AspNetCore-EFCore-API/Demo1-AspNetCore-EFCore-API.sln
+          - name: Demo2-Blazor-SignalR-Dashboard
+            solution: demos/Demo2-Blazor-SignalR-Dashboard/Demo2-Blazor-SignalR-Dashboard.sln
+          - name: Demo3-MVC-PowerPlatform-Integration
+            solution: demos/Demo3-MVC-PowerPlatform-Integration/Demo3-MVC-PowerPlatform-Integration.sln
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # All three demos pin .NET SDK 8.0.417 via their own global.json (verified identical
+      # across all three at demos/<Demo>/global.json). None of them require LocalDB or any
+      # other Windows-only dependency to build/test: Demo1's and Demo3's test suites run
+      # against EF Core InMemory / in-process mocks, and Demo2's Blazor component tests use
+      # bUnit (headless, no browser) — so an ubuntu-latest runner is sufficient and faster
+      # than windows-latest.
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "8.0.417"
+
+      - name: Restore
+        run: dotnet restore "${{ matrix.demo.solution }}"
+
+      - name: Build (Release)
+        run: dotnet build "${{ matrix.demo.solution }}" --no-restore -c Release
+
+      - name: Test (Release)
+        run: dotnet test "${{ matrix.demo.solution }}" --no-build -c Release

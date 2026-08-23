@@ -1,0 +1,14 @@
+# Design a Table Partitioning Strategy for a Large Growing Table
+
+**Category:** SQL Server
+**Use when:** A table's size is starting to hurt maintenance windows, index rebuild time, or archival/retention operations.
+
+## Prompt
+
+Evaluate whether table partitioning is the right solution for the attached large, continuously growing table, and if so design the strategy. Start with the actual problem being solved — maintenance window length (index rebuilds/reorgs, statistics updates), query performance for date/range-scoped access, or data lifecycle management (archiving/purging old data) — since the partition design differs depending on which is primary. Do not recommend partitioning purely for query performance without first confirming the query patterns actually benefit from partition elimination; partitioning does not substitute for proper indexing, and a poorly chosen partition key can make some queries slower by fragmenting an index that used to be contiguous.
+
+Choose a partition column that matches the natural access/retention pattern (almost always a date/datetime column for this kind of table) and confirm it's usable as a sargable predicate in the queries and jobs that will benefit (e.g., archival jobs, reporting queries scoped to a date range). Design the partition function and scheme with a practical boundary granularity (monthly, quarterly) based on data volume per period and expected partition count (avoid excessive partition counts, which SQL Server itself recommends limiting for statistics/query optimizer overhead reasons). Explain the mechanics of `SPLIT`/`MERGE` on the partition function for adding future partitions ahead of time, and `SWITCH` for near-instant partition-level archival/purge (moving a partition to a staging table instead of a row-by-row `DELETE`, which avoids the log growth and blocking of a large delete).
+
+Address the concrete migration path: creating the partition function/scheme, rebuilding the existing table/indexes as partition-aligned (this is a size-of-data operation on a large table and needs an online/offline decision and a maintenance window), and verifying existing unique/clustered indexes can be partition-aligned (a unique index not including the partition column requires special handling). Call out the effect on existing maintenance jobs (index rebuild jobs should become partition-aware to only touch recently modified partitions) and backup/restore strategy (partition-level or filegroup-level backups if partitions are split across filegroups).
+
+Provide the full DDL and migration plan as a proposal, explicitly note the expected downtime/maintenance window, and do not execute any part of it against production. Get approval and recommend a rehearsal against a production-sized non-production copy before applying anything to production.

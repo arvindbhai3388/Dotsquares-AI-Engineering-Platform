@@ -1,0 +1,14 @@
+# Add a File Upload Component with InputFile
+
+**Category:** Blazor
+**Use when:** A Blazor page needs to accept user file uploads with validation and progress feedback.
+
+## Prompt
+
+Before implementing, confirm the constraints with me: maximum file size, accepted file types/extensions, whether multiple files are allowed (`<InputFile multiple>`), and the upload destination (an API endpoint via `HttpClient`, or a SignalR-based Blazor Server upload). This matters architecturally because Blazor Server's default `IJSRuntime`/SignalR message size limit is small, so uploading a file's bytes through the circuit itself requires either streaming via `IBrowserFile.OpenReadStream` with an increased `MaximumReceiveMessageSize`/`RemoteRenderMode` message-size configuration, or uploading directly from the browser to an API endpoint instead of routing bytes through the circuit at all — propose which path fits this app's existing upload patterns before implementing.
+
+Bind `<InputFile OnChange="HandleFileSelected" multiple="@allowMultiple" accept="@acceptedTypes" />` and in the handler receive `InputFileChangeEventArgs`, validate each file's `Size` against the configured max (reject client-side with a clear message before attempting any upload) and its `ContentType`/extension against the allow-list — note that `accept` on the input is only a UI hint the browser applies to its file picker, it does not prevent a user from selecting a disallowed file type by other means, so always re-validate in code, and re-validate again server-side regardless since client checks are trivially bypassed.
+
+For the actual transfer, call `file.OpenReadStream(maxAllowedSize: ...)` (the explicit `maxAllowedSize` parameter is required and defaults to a conservative 500KB — a very common bug is forgetting to raise it and getting a silent `IOException` past that size) and stream it into a `MultipartFormDataContent` posted via injected `HttpClient`, or into a `RemoteBrowserFileStream` scenario if going through Blazor Server's own transfer mechanism. Report upload progress if the destination supports it, or at minimum show an indeterminate progress/spinner state and disable the file input during the upload to prevent concurrent submissions.
+
+Handle failure paths explicitly: network failure mid-upload, server-side rejection (e.g. virus scan, size limit at the API), and partial multi-file failure when `multiple` is enabled (report per-file success/failure rather than an all-or-nothing message). Dispose of any streams explicitly (`await using`) rather than relying on eventual GC, since open file streams held across awaited network calls can accumulate under concurrent uploads. Add bUnit tests that simulate `InputFileChangeEventArgs` with fake `IBrowserFile` implementations to verify size/type validation logic fires correctly without needing a real browser file picker.

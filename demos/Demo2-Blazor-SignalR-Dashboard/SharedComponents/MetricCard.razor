@@ -1,0 +1,44 @@
+@namespace SharedComponents
+
+<div class="metric-card metric-card--trend-@Trend.ToString().ToLowerInvariant()">
+    <div class="metric-card__title">@Title</div>
+    <div class="metric-card__value">
+        @Value<span class="metric-card__unit">@Unit</span>
+    </div>
+    <div class="metric-card__trend" data-testid="trend">
+        <span class="metric-card__trend-icon">@TrendIcon</span>
+        @if (!string.IsNullOrWhiteSpace(TrendLabel))
+        {
+            <span class="metric-card__trend-label">@TrendLabel</span>
+        }
+    </div>
+</div>
+
+@code {
+    /// <summary>Metric name shown above the value, e.g. "CPU".</summary>
+    [Parameter, EditorRequired]
+    public string Title { get; set; } = string.Empty;
+
+    /// <summary>Current metric value, already formatted as a string (e.g. "42.3").</summary>
+    [Parameter, EditorRequired]
+    public string Value { get; set; } = string.Empty;
+
+    /// <summary>Optional unit suffix, e.g. "%".</summary>
+    [Parameter]
+    public string? Unit { get; set; }
+
+    /// <summary>Direction the metric moved since the previous reading.</summary>
+    [Parameter]
+    public TrendDirection Trend { get; set; } = TrendDirection.Flat;
+
+    /// <summary>Optional supporting text next to the trend arrow, e.g. "+3.2 vs last reading".</summary>
+    [Parameter]
+    public string? TrendLabel { get; set; }
+
+    private string TrendIcon => Trend switch
+    {
+        TrendDirection.Up => "▲",
+        TrendDirection.Down => "▼",
+        _ => "▬"
+    };
+}

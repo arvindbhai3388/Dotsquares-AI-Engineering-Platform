@@ -1,0 +1,52 @@
+@model DocumentsViewModel
+@{
+    ViewData["Title"] = "Documents";
+}
+
+<h1>Documents</h1>
+<p class="text-muted">
+    Listed via <code>ISharePointDocumentService.ListDocumentsAsync</code> - backed today by
+    <code>MockSharePointDocumentService</code>'s in-memory library.
+</p>
+
+@if (!string.IsNullOrEmpty(Model.StatusMessage))
+{
+    <div class="alert alert-success">@Model.StatusMessage</div>
+}
+
+<table class="table table-striped align-middle">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Last modified</th>
+            <th>Modified by</th>
+            <th>Size</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+    @foreach (var doc in Model.Documents)
+    {
+        <tr>
+            <td>@doc.Name</td>
+            <td>@doc.LastModifiedUtc.ToLocalTime().ToString("g")</td>
+            <td>@doc.LastModifiedBy</td>
+            <td>@($"{doc.SizeInBytes / 1024.0:N0} KB")</td>
+            <td><a href="@doc.WebUrl" target="_blank" rel="noopener">Open</a></td>
+        </tr>
+    }
+    </tbody>
+</table>
+
+<hr />
+
+<h5>Upload a document (mock)</h5>
+<p class="text-muted">
+    Posts to <code>ISharePointDocumentService.UploadDocumentAsync</code>. Content is measured, not persisted -
+    a real implementation would <code>PUT</code> the bytes to Microsoft Graph.
+</p>
+<form asp-controller="Documents" asp-action="Upload" method="post" enctype="multipart/form-data" class="d-flex gap-2">
+    @Html.AntiForgeryToken()
+    <input type="file" name="file" class="form-control" style="max-width: 400px;" />
+    <button type="submit" class="btn btn-secondary">Upload</button>
+</form>

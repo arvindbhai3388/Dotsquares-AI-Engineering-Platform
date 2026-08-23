@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>TaskHub SignalR Test Client</title>
+  <!--
+    This page loads the SignalR JavaScript client from a public CDN, so it needs
+    internet access to run. It talks only to this demo's own /hubs/tasks endpoint —
+    no other external service is called. If you'd rather not depend on the CDN,
+    see the README for a curl-based negotiate check and a .NET client snippet instead.
+  -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.0/signalr.min.js"></script>
+  <style>
+    body { font-family: system-ui, sans-serif; max-width: 640px; margin: 2rem auto; }
+    #log { border: 1px solid #ccc; padding: 0.75rem; height: 300px; overflow-y: auto; white-space: pre-wrap; font-family: monospace; font-size: 0.85rem; }
+    #status { font-weight: bold; }
+  </style>
+</head>
+<body>
+  <h1>TaskHub SignalR Test Client</h1>
+  <p>Status: <span id="status">disconnected</span></p>
+  <p>
+    Connects to <code>/hubs/tasks</code> and listens for the <code>TaskStatusChanged</code>
+    event. Trigger it by calling <code>PATCH /api/tasks/{id}/status</code> (e.g. via the
+    <code>TaskTracker.Api.http</code> file, curl, or Swagger UI) while this page is open.
+  </p>
+  <div id="log"></div>
+
+  <script>
+    const logEl = document.getElementById("log");
+    const statusEl = document.getElementById("status");
+
+    function log(message) {
+      const line = document.createElement("div");
+      line.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+      logEl.appendChild(line);
+      logEl.scrollTop = logEl.scrollHeight;
+    }
+
+    const connection = new signalR.HubConnectionBuilder()
+      .withUrl("/hubs/tasks")
+      .withAutomaticReconnect()
+      .build();
+
+    connection.on("TaskStatusChanged", (notification) => {
+      log(`TaskStatusChanged: task #${notification.taskId} "${notification.title}" ${notification.previousStatus} -> ${notification.newStatus}`);
+    });
+
+    connection.onreconnecting(() => { statusEl.textContent = "reconnecting"; });
+    connection.onreconnected(() => { statusEl.textContent = "connected"; });
+    connection.onclose(() => { statusEl.textContent = "disconnected"; });
+
+    connection.start()
+      .then(() => {
+        statusEl.textContent = "connected";
+        log("Connected to /hubs/tasks");
+      })
+      .catch((err) => {
+        statusEl.textContent = "error";
+        log(`Connection failed: ${err}`);
+      });
+  </script>
+</body>
+</html>

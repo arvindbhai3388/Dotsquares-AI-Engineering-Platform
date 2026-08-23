@@ -1,0 +1,52 @@
+@namespace SharedComponents
+
+<div class="live-feed">
+    <div class="live-feed__title">@Title</div>
+    <ul class="live-feed__list">
+        @if (_events.Count == 0)
+        {
+            <li class="live-feed__empty">No events yet</li>
+        }
+        else
+        {
+            @foreach (var item in _events)
+            {
+                <li class="live-feed__item live-feed__item--@item.Level.ToString().ToLowerInvariant()">
+                    <span class="live-feed__time">@item.Timestamp.ToLocalTime().ToString("HH:mm:ss")</span>
+                    <span class="live-feed__message">@item.Message</span>
+                </li>
+            }
+        }
+    </ul>
+</div>
+
+@code {
+    /// <summary>Heading shown above the scrolling list.</summary>
+    [Parameter]
+    public string Title { get; set; } = "Live Feed";
+
+    /// <summary>Maximum number of events retained; oldest entries are dropped first.</summary>
+    [Parameter]
+    public int MaxItems { get; set; } = 10;
+
+    private readonly List<FeedEvent> _events = new();
+
+    /// <summary>Read-only snapshot of the events currently displayed, most-recent first.</summary>
+    public IReadOnlyList<FeedEvent> Events => _events;
+
+    /// <summary>
+    /// Pushes a new event onto the feed. Called imperatively by a parent (typically from
+    /// a SignalR "on message" callback) via a component reference, e.g.
+    /// <c>hubConnection.On&lt;FeedEvent&gt;("ReceiveEvent", e =&gt; liveFeedRef.AddEvent(e))</c>.
+    /// </summary>
+    public void AddEvent(FeedEvent feedEvent)
+    {
+        _events.Insert(0, feedEvent);
+        while (_events.Count > MaxItems)
+        {
+            _events.RemoveAt(_events.Count - 1);
+        }
+
+        StateHasChanged();
+    }
+}

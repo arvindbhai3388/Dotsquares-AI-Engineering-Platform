@@ -1,0 +1,14 @@
+# Add a Correctly Scoped DI Service to a Blazor App
+
+**Category:** Blazor
+**Use when:** Introducing a new service dependency into components and needing to choose the right DI lifetime for Blazor Server or WASM.
+
+## Prompt
+
+Before registering anything, confirm the intended lifetime with me by reasoning through what the service holds: if it caches or accumulates per-user/per-session state, it must be `Scoped` in Blazor Server (one instance per circuit) — never `Singleton`, which would share that state across every concurrently connected user and is a classic Blazor Server data-leak bug. If it's stateless or holds only shared, thread-safe, user-independent data (a cache of reference data, a configuration snapshot), `Singleton` is appropriate and more efficient. In Blazor WebAssembly, `Scoped` and `Singleton` are functionally equivalent since each browser tab is an isolated process with one root DI container, but keep the registration lifetime semantically honest anyway for portability and clarity.
+
+Watch specifically for the "captive dependency" problem: a `Singleton` service must never take a `Scoped` service (like a DbContext, or anything holding per-circuit state) as a constructor dependency, because the DI container will resolve and pin that scoped instance for the singleton's entire lifetime — effectively promoting it to a singleton and creating cross-user state leakage or a long-lived `DbContext` used across concurrent requests, which is unsafe. If you find this pattern already present in the codebase while making a change nearby, flag it explicitly rather than deepening it.
+
+For any service injected into components that isn't inherently thread-safe (most services aren't, and most DbContext-like abstractions explicitly aren't), remember that Blazor Server's per-circuit scope does not by itself guarantee single-threaded access — a component can still fire overlapping async operations against the same injected instance (e.g. two rapid user actions each awaiting the same scoped service concurrently) leading to reentrancy issues; serialize access or design the service to be stateless per call rather than relying on assumed sequential access.
+
+Register the service in the appropriate composition root (`Program.cs`/`Startup` for the hosting project — confirm which one this app actually wires up services in before adding a duplicate registration elsewhere) using `services.AddScoped<IYourService, YourService>()` against an interface, not a concrete type, so components and tests can substitute a fake/mock. Inject via constructor injection in non-component classes and `[Inject]` in components/pages — avoid `IServiceProvider.GetService` service-locator-style resolution inside component code. Add unit tests for the service's own logic in isolation, and a bUnit test for at least one consuming component confirming it renders correctly against a mocked implementation of the new interface.

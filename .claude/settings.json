@@ -1,0 +1,114 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git status)",
+      "Bash(git diff)",
+      "Bash(git diff:*)",
+      "Bash(git log:*)",
+      "Bash(git show:*)",
+      "Bash(git branch)",
+      "Bash(git branch:*)",
+      "Bash(git fetch)",
+      "Bash(git remote -v)",
+      "Bash(git stash list)",
+
+      "Bash(dotnet build:*)",
+      "Bash(dotnet test:*)",
+      "Bash(dotnet restore:*)",
+      "Bash(dotnet format --verify-no-changes:*)",
+      "Bash(dotnet list:*)",
+      "Bash(dotnet --version)",
+      "Bash(dotnet --info)",
+
+      "Bash(nuget restore:*)",
+      "Bash(msbuild:* /t:Build)",
+      "Bash(msbuild:* -t:Build)",
+
+      "Bash(ls)",
+      "Bash(ls:*)",
+      "Bash(dir)",
+      "Bash(pwd)",
+      "Bash(find:*)",
+      "Bash(cat:*)",
+      "Bash(wc:*)",
+      "Bash(echo:*)",
+
+      "Glob(**)",
+      "Grep(**)",
+      "Read(**)"
+    ],
+
+    "ask": [
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git checkout:*)",
+      "Bash(git switch:*)",
+      "Bash(git merge:*)",
+      "Bash(git rebase:*)",
+      "Bash(git stash:*)",
+      "Bash(git tag:*)",
+
+      "Bash(dotnet pack:*)",
+      "Bash(dotnet publish:*)",
+      "Bash(dotnet nuget push:*)",
+      "Bash(dotnet add package:*)",
+      "Bash(dotnet remove package:*)",
+      "Bash(dotnet tool install:*)",
+
+      "Bash(npm install:*)",
+      "Bash(npm ci:*)",
+
+      "Edit(demos/**/appsettings.Development.json)",
+      "Write(demos/**/appsettings.Development.json)"
+    ],
+
+    "deny": [
+      "Bash(git push:*)",
+      "Bash(git push --force:*)",
+      "Bash(git reset --hard:*)",
+      "Bash(git clean -f:*)",
+      "Bash(git clean -fd:*)",
+      "Bash(git branch -D:*)",
+      "Bash(git rebase -i:*)",
+      "Bash(git filter-branch:*)",
+      "Bash(gh pr create:*)",
+      "Bash(gh pr merge:*)",
+      "Bash(gh release:*)",
+
+      "Bash(rm -rf:*)",
+      "Bash(rm -r -f:*)",
+      "Bash(Remove-Item -Recurse -Force:*)",
+      "Bash(del /f /s /q:*)",
+      "Bash(format:*)",
+      "Bash(shutdown:*)",
+
+      "Read(demos/**/appsettings.json)",
+      "Read(demos/**/appsettings.*.json)",
+      "Read(demos/**/web.config)",
+      "Read(demos/**/secrets.json)",
+      "Read(demos/**/launchSettings.json)",
+      "Read(**/.env)",
+      "Read(**/.env.*)",
+      "Read(**/*.key)",
+      "Read(**/*.pem)",
+      "Read(**/*.pfx)",
+      "Read(**/*.p12)",
+      "Read(**/*.snk)",
+      "Read(**/*.crt)",
+      "Read(**/*.cer)",
+
+      "Edit(demos/**/appsettings.json)",
+      "Edit(demos/**/appsettings.*.json)",
+      "Edit(demos/**/web.config)",
+      "Edit(demos/**/secrets.json)",
+      "Edit(demos/**/launchSettings.json)",
+
+      "Read(~/.ssh/**)",
+      "Read(~/.aws/**)",
+      "Read(~/.azure/**)",
+      "Read(~/.kube/**)"
+    ],
+
+    "defaultMode": "ask"
+  }
+}

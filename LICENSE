@@ -1,0 +1,35 @@
+Dotsquares Internal Proprietary Notice
+
+Dotsquares AI Engineering Platform
+Author: Arvind Kushwaha
+Company: Dotsquares
+
+This repository and its contents — including but not limited to the agents
+and skills under `.claude/`, the templates under `templates/`, the wiki
+pages under `wiki/`, the documentation under `docs/`, and the prompt
+library under `prompts/` — are proprietary, internal tooling created by
+Arvind Kushwaha for Dotsquares.
+
+This material is intended solely for use by Dotsquares employees and
+authorized contractors, for internal Dotsquares purposes, including
+adapting and applying it across Dotsquares client engagements. It is not
+licensed for external distribution, resale, or use outside of Dotsquares
+and its client engagements, and no rights are granted to any party outside
+Dotsquares except as separately and explicitly agreed in writing.
+
+No warranty, express or implied, is made regarding this material's fitness
+for any particular purpose. Use of any code, guidance, or generated output
+produced with the help of this platform remains the responsibility of the
+Dotsquares team applying it to a given client project.
+
+This notice governs the platform content described above only. It does not
+apply to, and does not supersede, the separate open-source licenses already
+vendored within the demo projects under `demos/` — for example the
+third-party front-end library licenses bundled under
+`demos/Demo3-MVC-PowerPlatform-Integration/src/ClientReportingPortal.Web/wwwroot/lib/*/LICENSE*`.
+Each of those retains its own original license terms as provided by its
+respective upstream project.
+
+For questions about the scope of this notice or about using this platform
+outside its stated internal purpose, contact the framework's maintainers
+at Dotsquares.

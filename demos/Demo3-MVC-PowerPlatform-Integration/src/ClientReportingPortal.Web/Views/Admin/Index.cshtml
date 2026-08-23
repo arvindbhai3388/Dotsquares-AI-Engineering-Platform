@@ -1,0 +1,43 @@
+@model AdminViewModel
+@{
+    ViewData["Title"] = "Admin";
+}
+
+<h1>Integration Status</h1>
+<p class="text-muted">
+    Every integration in this demo is registered in <code>Program.cs</code> against an interface.
+    This page reads the active implementation directly through dependency injection - it does not
+    hardcode "Mock" anywhere; swapping the DI registration for a real implementation would update
+    this page automatically.
+</p>
+
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="card text-center"><div class="card-body"><h3>@Model.TaskCount</h3><p class="text-muted mb-0">Tasks (via ITaskService)</p></div></div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-center"><div class="card-body"><h3>@Model.DocumentCount</h3><p class="text-muted mb-0">Documents (via ISharePointDocumentService)</p></div></div>
+    </div>
+</div>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Integration</th>
+            <th>Interface</th>
+            <th>Active implementation</th>
+            <th>Real implementation notes</th>
+        </tr>
+    </thead>
+    <tbody>
+    @foreach (var row in Model.Integrations)
+    {
+        <tr>
+            <td>@row.IntegrationName</td>
+            <td><code>@row.Interface</code></td>
+            <td><span class="badge bg-warning text-dark">@row.ActiveImplementation</span></td>
+            <td>@row.RealImplementationNote</td>
+        </tr>
+    }
+    </tbody>
+</table>

@@ -1,0 +1,51 @@
+@{
+    ViewData["Title"] = "Client Reporting Portal";
+}
+
+<div class="text-center mb-5">
+    <h1 class="display-5">Client Reporting Portal</h1>
+    <p class="lead">
+        A .NET 8 ASP.NET Core MVC demo of Power Platform / Microsoft 365 integration patterns:
+        Power BI embedded analytics, SharePoint/Graph documents, and a Power Apps
+        custom-connector-shaped API - all mocked behind clean interfaces so it runs with
+        zero real tenant or credentials.
+    </p>
+</div>
+
+<div class="row g-4">
+    <div class="col-md-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title">Dashboard</h5>
+                <p class="card-text">Power BI report embedded via the "powerbi-client" JS SDK, fed by <code>IPowerBiEmbedService</code>.</p>
+                <a asp-controller="Dashboard" asp-action="Index" class="btn btn-primary">Open Dashboard</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title">Documents</h5>
+                <p class="card-text">SharePoint document library listing/upload backed by <code>ISharePointDocumentService</code> (Graph-shaped).</p>
+                <a asp-controller="Documents" asp-action="Index" class="btn btn-primary">Open Documents</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title">Admin</h5>
+                <p class="card-text">Shows which mock/real implementation each integration seam is currently wired to.</p>
+                <a asp-controller="Admin" asp-action="Index" class="btn btn-primary">Open Admin</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="mt-5">
+    <h5>Power Apps custom connector target</h5>
+    <p>
+        <code>/api/tasks</code> is a plain CRUD API shaped for import into Power Apps as a custom connector.
+        Explore its OpenAPI document at <a href="/swagger">/swagger</a>.
+    </p>
+</div>

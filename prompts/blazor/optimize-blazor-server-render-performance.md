@@ -1,0 +1,14 @@
+# Diagnose and Fix Excessive Re-Renders in a Blazor Server Component
+
+**Category:** Blazor
+**Use when:** A page feels laggy, or a Blazor Server app shows high server CPU under load, and the cause is suspected to be render churn.
+
+## Prompt
+
+Before changing code, diagnose first: read the component tree involved, identify every `StateHasChanged()` call (explicit or implicit via `EventCallback` invocation, timer ticks, SignalR/hub message handlers, cascading value changes), and map out how often each one actually fires versus how often the resulting render is visually necessary. In Blazor Server specifically, every render round-trips a diff over the SignalR circuit to the browser, so unnecessary renders are not just wasted CPU but wasted network chatter per user, and the effect multiplies with concurrent users on one server. Report your findings as a plan (which components/handlers are the worst offenders and why) before making changes, so I can confirm the diagnosis before you optimize.
+
+Common causes to check for specifically: a parent component re-rendering triggers a re-render of all child components by default regardless of whether their parameters actually changed — for expensive child components, override `ShouldRender()` to return false when relevant fields haven't changed, or implement parameter equality checks. A timer or polling loop (`PeriodicTimer`, `System.Threading.Timer`) calling `InvokeAsync(StateHasChanged)` on every tick even when the underlying data hasn't changed — gate the call behind an actual data-changed comparison. A cascading value marked non-fixed that changes far more often than its consumers need to react, fanning out renders across the whole subtree — reconsider whether it should be fixed, scoped narrower, or replaced with a targeted event.
+
+Verify every `StateHasChanged()` call in an event handler or async continuation is actually necessary — Blazor already re-renders automatically after synchronous UI event handlers (`@onclick`, etc.) complete, so an explicit `StateHasChanged()` immediately after one is usually redundant; it's only required when state changed outside Blazor's own event dispatch (timers, background tasks, JS interop callbacks, SignalR handlers). Check for accidental renders caused by creating new object/delegate instances inline in markup on every render pass (e.g. a new lambda passed as `EventCallback` recreated each render defeating any downstream equality-based skip logic).
+
+After applying fixes, verify improvement concretely: use browser dev tools network/timing on the SignalR circuit, or add temporary render-count logging (`OnAfterRender(firstRender)` counter) during manual testing, and remove any diagnostic logging before calling this done. Add or update bUnit tests asserting `ShouldRender`-gated components do not re-render when irrelevant parameters change, and confirm no visual regressions were introduced by newly skipped renders.

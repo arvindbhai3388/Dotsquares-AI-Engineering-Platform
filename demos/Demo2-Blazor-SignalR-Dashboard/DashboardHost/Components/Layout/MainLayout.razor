@@ -1,0 +1,34 @@
+﻿@inherits LayoutComponentBase
+
+@* Demonstrates cascading parameters: every descendant component (including SharedComponents
+   like StatusBadge) can pick up the current theme with [CascadingParameter] without it being
+   threaded through every intermediate component's parameter list. *@
+<CascadingValue Value="_theme">
+    <div class="page">
+        <div class="sidebar">
+            <NavMenu />
+        </div>
+
+        <main>
+            <div class="top-row px-4">
+                <a href="https://learn.microsoft.com/aspnet/core/" target="_blank">About</a>
+            </div>
+
+            <article class="content px-4">
+                @Body
+            </article>
+        </main>
+    </div>
+</CascadingValue>
+
+<div id="blazor-error-ui">
+    An unhandled error has occurred.
+    <a href="" class="reload">Reload</a>
+    <a class="dismiss">🗙</a>
+</div>
+
+@code {
+    // A static demo theme. In a larger app this would come from a scoped/singleton
+    // settings service instead of being hardcoded here.
+    private readonly ThemeSettings _theme = new("Dark Ops", "#4caf50", IsDark: true);
+}

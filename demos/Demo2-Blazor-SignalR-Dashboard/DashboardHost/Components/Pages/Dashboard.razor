@@ -1,0 +1,99 @@
+@page "/dashboard"
+@using Microsoft.AspNetCore.SignalR.Client
+@implements IAsyncDisposable
+@inject NavigationManager Navigation
+
+<PageTitle>Live Dashboard</PageTitle>
+
+<div class="dashboard-header">
+    <h1>Live Ops Dashboard</h1>
+    <StatusBadge Status="@(_isConnected ? ServiceStatus.Healthy : ServiceStatus.Down)"
+                 Label="@(_isConnected ? "Live" : "Disconnected")" />
+</div>
+
+<div class="metric-grid">
+    <MetricCard Title="CPU" Value="@_cpuValue" Unit="%" Trend="@_cpuTrend" />
+    <MetricCard Title="Active Users" Value="@_usersValue" Trend="@_usersTrend" />
+    <MetricCard Title="Error Rate" Value="@_errorValue" Unit="%" Trend="@_errorTrend" />
+</div>
+
+<LiveFeed @ref="_liveFeed" Title="Recent Events" MaxItems="12" />
+
+@code {
+    private HubConnection? _hubConnection;
+    private LiveFeed? _liveFeed;
+    private bool _isConnected;
+
+    private MetricSnapshot? _previous;
+
+    private string _cpuValue = "--";
+    private TrendDirection _cpuTrend;
+
+    private string _usersValue = "--";
+    private TrendDirection _usersTrend;
+
+    private string _errorValue = "--";
+    private TrendDirection _errorTrend;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _hubConnection = new HubConnectionBuilder()
+            .WithUrl(Navigation.ToAbsoluteUri("/hubs/metrics"))
+            .WithAutomaticReconnect()
+            .Build();
+
+        _hubConnection.On<MetricSnapshot>("ReceiveMetric", OnMetricReceived);
+        _hubConnection.On<FeedEvent>("ReceiveEvent", OnEventReceived);
+
+        _hubConnection.Reconnected += _ => SetConnected(true);
+        _hubConnection.Reconnecting += _ => SetConnected(false);
+        _hubConnection.Closed += _ => SetConnected(false);
+
+        await _hubConnection.StartAsync();
+        _isConnected = true;
+    }
+
+    private Task OnMetricReceived(MetricSnapshot snapshot)
+    {
+        _cpuTrend = Trend(_previous?.CpuPercent, snapshot.CpuPercent);
+        _usersTrend = Trend(_previous?.ActiveUsers, snapshot.ActiveUsers);
+        _errorTrend = Trend(_previous?.ErrorRatePercent, snapshot.ErrorRatePercent);
+
+        _cpuValue = snapshot.CpuPercent.ToString("0.0");
+        _usersValue = snapshot.ActiveUsers.ToString();
+        _errorValue = snapshot.ErrorRatePercent.ToString("0.00");
+
+        _previous = snapshot;
+
+        return InvokeAsync(StateHasChanged);
+    }
+
+    private Task OnEventReceived(FeedEvent feedEvent)
+    {
+        return InvokeAsync(() => _liveFeed?.AddEvent(feedEvent));
+    }
+
+    private Task SetConnected(bool connected)
+    {
+        _isConnected = connected;
+        return InvokeAsync(StateHasChanged);
+    }
+
+    private static TrendDirection Trend(double? previous, double current)
+    {
+        if (previous is null || Math.Abs(current - previous.Value) < 0.001)
+        {
+            return TrendDirection.Flat;
+        }
+
+        return current > previous.Value ? TrendDirection.Up : TrendDirection.Down;
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        if (_hubConnection is not null)
+        {
+            await _hubConnection.DisposeAsync();
+        }
+    }
+}

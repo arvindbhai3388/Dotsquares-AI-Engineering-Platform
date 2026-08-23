@@ -1,0 +1,17 @@
+@namespace SharedComponents
+
+<span class="status-badge status-badge--@Status.ToString().ToLowerInvariant()">
+    <span class="status-badge__dot"></span>@ResolvedLabel
+</span>
+
+@code {
+    /// <summary>Health state the badge represents.</summary>
+    [Parameter]
+    public ServiceStatus Status { get; set; } = ServiceStatus.Healthy;
+
+    /// <summary>Optional override for the displayed text; defaults to <see cref="Status"/>.</summary>
+    [Parameter]
+    public string? Label { get; set; }
+
+    private string ResolvedLabel => Label ?? Status.ToString();
+}
