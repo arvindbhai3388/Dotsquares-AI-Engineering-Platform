@@ -93,6 +93,8 @@ There's no live link to pull from — a client project adopted this framework by
 3. Manually re-apply whatever's relevant to that project — don't blindly overwrite the client's filled-in `CLAUDE.md`, since it contains that project's own project-specific sections (restricted files, actual stack/versions, build/test commands) alongside the shared baseline content, and a naive overwrite would wipe those out.
 4. Treat this the same as any other change to a client repo: propose what you're about to bring in and why, get it approved, then apply it — not a silent background sync.
 
+See also [wiki/Multi-Project-Multi-Developer-Guide.md](../wiki/Multi-Project-Multi-Developer-Guide.md) for how project-to-project drift is expected to work when the same developer or organization maintains several client projects on this platform at once.
+
 ---
 
 ## Related pages

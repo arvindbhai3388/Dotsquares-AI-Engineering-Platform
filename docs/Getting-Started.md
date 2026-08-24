@@ -60,4 +60,5 @@ With the client project cloned and its `CLAUDE.md` in place:
 - [MCP Setup](MCP-Setup.md) — connecting Claude Code to external systems on a client project.
 - [wiki/Home.md](../wiki/Home.md) — full index of standards and integration guides.
 - [wiki/AI-Workflow-Discipline.md](../wiki/AI-Workflow-Discipline.md) — the process this whole walkthrough is built around.
+- [wiki/Multi-Project-Multi-Developer-Guide.md](../wiki/Multi-Project-Multi-Developer-Guide.md) — read this once you're assigned to more than one project, or a second developer joins yours.
 - [FAQ](FAQ.md) — common early questions (ownership of AI-generated code, conflicting client conventions, adding a new stack).

@@ -9,6 +9,7 @@ This is the index for the Dotsquares AI Engineering Platform wiki: architecture 
 | [Architecture Overview](Architecture-Overview.md) | How a typical Dotsquares client solution is layered, where each supported stack sits, and how `.claude/agents` map onto those layers. |
 | [AI Workflow Discipline](AI-Workflow-Discipline.md) | The analyze → propose → approve → implement → test → review discipline: why each gate exists, realistic failure modes when it's skipped, and how `.claude/skills` enforce it. |
 | [Onboarding Guide](Onboarding-Guide.md) | A new developer's first two weeks: what to read, what to run, how to pick the right agent/skill for a task. |
+| [Multi-Project & Multi-Developer Guide](Multi-Project-Multi-Developer-Guide.md) | How this framework holds up with many developers on one project, one developer across many projects, and many developers across many projects. |
 
 ## Coding Standards
 
