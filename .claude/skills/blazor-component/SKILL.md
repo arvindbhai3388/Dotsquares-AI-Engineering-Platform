@@ -11,6 +11,9 @@ description: >
 
 # Blazor Component Scaffolding Workflow
 
+*Can be approved with a single Yes/No that carries this through to completion instead of a
+per-step check-in — see `wiki/AI-Workflow-Discipline.md`'s "Streamlined mode" section.*
+
 A new component should be usable, testable, and correctly disposed from
 the moment it's created — this skill walks through each of those
 concerns explicitly rather than leaving them to be discovered later.

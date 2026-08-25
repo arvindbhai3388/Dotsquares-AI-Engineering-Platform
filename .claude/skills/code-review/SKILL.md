@@ -11,6 +11,9 @@ description: >
 
 # Code Review Workflow
 
+*Can be approved with a single Yes/No that carries this through to completion instead of a
+per-step check-in — see `wiki/AI-Workflow-Discipline.md`'s "Streamlined mode" section.*
+
 This skill runs the Review step of Analyze → Propose → Approve →
 Implement → Test → **Review** as a repeatable checklist, not an
 open-ended "look it over."

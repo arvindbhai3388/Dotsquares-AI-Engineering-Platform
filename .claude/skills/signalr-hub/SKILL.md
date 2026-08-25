@@ -12,6 +12,9 @@ description: >
 
 # SignalR Hub Addition Workflow
 
+*Can be approved with a single Yes/No that carries this through to completion instead of a
+per-step check-in — see `wiki/AI-Workflow-Discipline.md`'s "Streamlined mode" section.*
+
 Adding hub surface is a public-contract change the moment any client
 connects to it — this skill treats it that way from the start, rather
 than as "just adding a method."

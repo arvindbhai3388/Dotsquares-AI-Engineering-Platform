@@ -12,6 +12,9 @@ description: >
 
 # Architecture Analysis Workflow
 
+*Can be approved with a single Yes/No that carries this through to completion instead of a
+per-step check-in — see `wiki/AI-Workflow-Discipline.md`'s "Streamlined mode" section.*
+
 Explaining a flow correctly with the fewest files read is the actual
 skill here — this is the discipline that keeps the platform's minimum-
 context principle real for open-ended "how does this work" questions,

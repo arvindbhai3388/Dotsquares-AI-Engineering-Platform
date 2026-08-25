@@ -65,6 +65,37 @@ graph LR
     E --> F[Review]
 ```
 
+### Three workflow enhancements
+
+- **Streamlined approval mode** — every skill can be approved with a single Yes/No at Approve that carries through Implement → Test → Review without further per-step check-ins. It never covers commit/push, which stays a separate explicit request every time. Full detail: [`wiki/AI-Workflow-Discipline.md`](wiki/AI-Workflow-Discipline.md#streamlined-mode--a-single-yesno-carries-through-to-review).
+- **QA Excel test-case tracking** (opt-in) — the [`qa-test-tracking`](.claude/skills/qa-test-tracking/) skill auto-saves planned test cases to a styled Excel workbook at Plan time and auto-fills real Pass/Fail results at Validate time, for a stakeholder-facing record separate from the automated test suite. Enable per project via `<QA_ARTIFACTS_FOLDER>` in `templates/CLAUDE-full.md`/`CLAUDE-minimal.md`.
+- **Post-copy integration verification** — run this prompt as your very first Claude Code session in a client project, immediately after copying files from this platform in:
+
+  ```
+  I just copied Claude Code configuration from the Dotsquares AI Engineering Platform into
+  this project — likely some combination of CLAUDE.md, .claude/settings.json, and specific
+  agent/skill files. Before I start relying on this setup, verify it end to end:
+
+  1. Read the copied CLAUDE.md in full and list every remaining <PLACEHOLDER> value that
+     still needs to be filled in — quote the exact placeholder text and the section it's in.
+  2. Read this project's actual .csproj/.sln files to determine its real tech stack, then
+     cross-check every copied agent/skill against that stack. Flag any agent/skill that
+     references a technology this project doesn't actually use.
+  3. Based on the same real-stack check, identify anything critical this project's actual
+     stack needs that wasn't copied.
+  4. Confirm .claude/settings.json (if copied) has had its _comment key removed and its
+     allow/ask/deny lists actually match this project's toolchain.
+  5. Do not modify any application source code as part of this check, and do not guess at
+     project-specific secrets or business context you don't have evidence for.
+  6. Report back as a clear checklist: what's already correct, what's missing, and what I
+     still need to decide or fill in myself.
+
+  Stop after producing this report — don't start filling in placeholders or deleting files
+  until I've reviewed it and told you which changes to make.
+  ```
+
+  Full version with usage notes: [`prompts/architecture-and-planning/verify-platform-integration-after-copy.md`](prompts/architecture-and-planning/verify-platform-integration-after-copy.md).
+
 ## Agents
 
 All 16 agents live in [`.claude/agents/`](.claude/agents/).

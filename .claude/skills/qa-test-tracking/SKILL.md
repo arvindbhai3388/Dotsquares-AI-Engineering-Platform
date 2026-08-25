@@ -16,6 +16,9 @@ description: >
 
 # QA Test-Case Tracking Workflow
 
+*Can be approved with a single Yes/No that carries this through to completion instead of a
+per-step check-in — see `wiki/AI-Workflow-Discipline.md`'s "Streamlined mode" section.*
+
 This is a **manual-QA artifact**, separate from the automated tests the `unit-testing` skill
 writes — it exists so a non-technical stakeholder (QA lead, client, project manager) can see the
 test plan and its real results without reading code or a test runner's console output. Only runs

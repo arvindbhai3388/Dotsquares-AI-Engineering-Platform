@@ -12,6 +12,9 @@ description: >
 
 # SharePoint/Graph Integration Workflow
 
+*Can be approved with a single Yes/No that carries this through to completion instead of a
+per-step check-in — see `wiki/AI-Workflow-Discipline.md`'s "Streamlined mode" section.*
+
 The two decisions that matter most here — auth model and permission
 scope — are the hardest to change after the fact (they involve tenant
 admin consent), so this workflow front-loads them.

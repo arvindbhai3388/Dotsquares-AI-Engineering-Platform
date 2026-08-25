@@ -12,6 +12,9 @@ description: >
 
 # Power BI Embed Setup Workflow
 
+*Can be approved with a single Yes/No that carries this through to completion instead of a
+per-step check-in — see `wiki/AI-Workflow-Discipline.md`'s "Streamlined mode" section.*
+
 This walks through embed-for-your-customers (app-owns-data) setup — the
 pattern almost all client SaaS-style embedding scenarios need — with RLS
 designed in from the start rather than retrofitted.

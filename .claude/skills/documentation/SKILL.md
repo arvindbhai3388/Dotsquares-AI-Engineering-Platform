@@ -11,6 +11,9 @@ description: >
 
 # Documentation Workflow
 
+*Can be approved with a single Yes/No that carries this through to completion instead of a
+per-step check-in — see `wiki/AI-Workflow-Discipline.md`'s "Streamlined mode" section.*
+
 Documentation drift — a doc that describes how something used to work —
 is worse than no documentation, because it's actively misleading and
 consumed with false confidence (including by `architecture-analyst`,

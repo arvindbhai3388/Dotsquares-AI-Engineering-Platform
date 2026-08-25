@@ -13,6 +13,9 @@ description: >
 
 # EF Core Migration Workflow (Expand/Contract)
 
+*Can be approved with a single Yes/No that carries this through to completion instead of a
+per-step check-in — see `wiki/AI-Workflow-Discipline.md`'s "Streamlined mode" section.*
+
 Any schema change that a currently-running previous version of the app
 still reads or writes is a **breaking** change if done in one step. This
 skill enforces expand/contract: make the new shape additive and

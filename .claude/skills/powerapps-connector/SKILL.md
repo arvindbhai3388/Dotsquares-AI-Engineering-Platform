@@ -12,6 +12,9 @@ description: >
 
 # Power Platform Custom Connector Workflow
 
+*Can be approved with a single Yes/No that carries this through to completion instead of a
+per-step check-in — see `wiki/AI-Workflow-Discipline.md`'s "Streamlined mode" section.*
+
 A custom connector's OpenAPI definition becomes a public contract the
 moment any maker builds an app against it — this workflow treats it that
 way from the first draft, not as an implementation detail to firm up

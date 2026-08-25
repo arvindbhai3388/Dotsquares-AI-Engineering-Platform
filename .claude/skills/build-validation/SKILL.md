@@ -14,6 +14,9 @@ description: >
 
 # Build Validation Workflow
 
+*Can be approved with a single Yes/No that carries this through to completion instead of a
+per-step check-in — see `wiki/AI-Workflow-Discipline.md`'s "Streamlined mode" section.*
+
 Never assert a build or test result without having actually run the
 command. This skill exists specifically because mixed-toolchain .NET
 solutions (a common reality in client codebases with a legacy web app

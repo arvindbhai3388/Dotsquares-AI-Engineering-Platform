@@ -13,6 +13,9 @@ description: >
 
 # Unit Testing Workflow
 
+*Can be approved with a single Yes/No that carries this through to completion instead of a
+per-step check-in — see `wiki/AI-Workflow-Discipline.md`'s "Streamlined mode" section.*
+
 This skill enforces test-first discipline while never assuming a test
 framework — a platform used by 50+ developers across many client projects
 will encounter all of xUnit, MSTest, and NUnit, sometimes more than one
