@@ -7,6 +7,10 @@ patterns**, structured so the UI pieces are reusable from a Blazor WebAssembly h
 No external services, credentials, or connection strings are required — all metrics are
 generated in-process by a background service.
 
+![Illustrative mockup of the Live Ops Dashboard](screenshots/dashboard-mockup.svg)
+
+*The image above is a hand-drawn illustrative mockup of the page layout, not a real screenshot — run the app yourself (see "Running it" below) to see the actual live, SignalR-driven UI.*
+
 > **Note on folder layout.** Unlike Demo1 and Demo3, this demo does not use a top-level
 > `src/`/`tests/` split. `SharedComponents` is a Razor Class Library (RCL) meant to be
 > referenced directly at the solution root — the standard, idiomatic layout for an RCL meant

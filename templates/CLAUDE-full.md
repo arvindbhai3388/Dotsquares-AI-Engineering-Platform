@@ -354,6 +354,15 @@ For non-trivial tasks:
 - Never claim a build/test succeeded unless it was actually run.
 - Clearly state what was and was not verified.
 
+### QA Artifacts (optional — delete this subsection if the project doesn't want it)
+
+If this project wants a stakeholder-facing manual-QA record separate from the automated tests
+above, configure `<QA_ARTIFACTS_FOLDER>` (an absolute path outside this repo) and the
+`qa-test-tracking` skill will auto-save planned test cases to an Excel workbook there at Plan time,
+then auto-fill real Pass/Fail results at Validate time — never marking a case Pass without an
+actual test run behind it. Leave `<QA_ARTIFACTS_FOLDER>` unset (or delete this subsection) to skip
+this entirely; it's additive to Test-First/Validate, never a replacement for them.
+
 ### Review
 
 Before finishing, verify against `code-review-checklist.md`:

@@ -13,6 +13,10 @@ credentials, and zero network calls to Microsoft services**. The point of the de
 every mock is written so a developer can see exactly what a real implementation would need to
 change, without touching a single controller or view.
 
+![Illustrative mockup of the Client Reporting Portal](screenshots/dashboard-mockup.svg)
+
+*The image above is a hand-drawn illustrative mockup of the page layout, not a real screenshot — run the app yourself (see "Running it" below) to see the actual live UI.*
+
 ## What this demonstrates
 
 | Page / route | Interface | Mock implementation | What it demonstrates |

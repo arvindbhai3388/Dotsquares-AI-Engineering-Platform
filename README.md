@@ -12,8 +12,8 @@ Dotsquares delivers .NET solutions across 50+ developers and many concurrent cli
 ## Key capabilities
 
 - **16 specialized agents** (`.claude/agents/`) — one per supported .NET stack plus cross-cutting agents for architecture analysis, code review, security review, unit testing, and build validation.
-- **12 enforced-workflow skills** (`.claude/skills/`) — slash-command workflows that walk a task through the platform's Analyze → Propose → Approve → Implement → Test → Review discipline instead of leaving it to individual discretion.
-- **217 copy-paste-ready prompts** (`prompts/`) across 12 stack/category directories, each written to fit the same workflow discipline.
+- **13 enforced-workflow skills** (`.claude/skills/`) — slash-command workflows that walk a task through the platform's Analyze → Propose → Approve → Implement → Test → Review discipline instead of leaving it to individual discretion, with an optional streamlined single-approval mode and an optional Excel-based manual-QA tracking skill.
+- **218 copy-paste-ready prompts** (`prompts/`) across 12 stack/category directories, each written to fit the same workflow discipline.
 - **Project bootstrap templates** (`templates/`) — `CLAUDE.md` starting points, a permissions baseline, an MCP baseline, review checklists, and 12 per-stack starter-project scaffolds.
 - **3 independently buildable demo projects** (`demos/`) exercising the framework's patterns end to end, with real, passing automated test suites.
 - **A non-negotiable workflow discipline** — `Analyze → Propose → Approve → Implement → Test → Review` — applied consistently across agents, skills, prompts, and templates.
@@ -97,13 +97,14 @@ All 16 agents live in [`.claude/agents/`](.claude/agents/).
 
 ## Skills
 
-All 12 skills live in [`.claude/skills/`](.claude/skills/), each a `SKILL.md`-defined slash-command workflow.
+All 13 skills live in [`.claude/skills/`](.claude/skills/), each a `SKILL.md`-defined slash-command workflow.
 
 | Skill | Purpose |
 |---|---|
-| [`new-feature`](.claude/skills/new-feature/) | Walks a new feature through Analyze → Propose → Approve end to end |
+| [`new-feature`](.claude/skills/new-feature/) | Walks a new feature through Analyze → Propose → Approve end to end (supports a streamlined single Yes/No approval mode — see `wiki/AI-Workflow-Discipline.md`) |
 | [`code-review`](.claude/skills/code-review/) | Runs the standing review checklist against an actual diff |
 | [`unit-testing`](.claude/skills/unit-testing/) | Test-First and Validate workflows for any supported stack |
+| [`qa-test-tracking`](.claude/skills/qa-test-tracking/) | Optional Excel manual-QA workbook, auto-saved at Plan and auto-updated with real results at Validate |
 | [`architecture-analysis`](.claude/skills/architecture-analysis/) | Scopes which layers/projects a task actually touches |
 | [`build-validation`](.claude/skills/build-validation/) | Final build/test gate before a change is called done |
 | [`documentation`](.claude/skills/documentation/) | Keeps project documentation in sync with a source change |
@@ -116,7 +117,7 @@ All 12 skills live in [`.claude/skills/`](.claude/skills/), each a `SKILL.md`-de
 
 ## Prompt library
 
-[`prompts/README.md`](prompts/README.md) indexes **217 copy-paste-ready prompts** across 12 categories, each self-contained and written to fit the Analyze → Propose → Approve → Implement → Test → Review discipline:
+[`prompts/README.md`](prompts/README.md) indexes **218 copy-paste-ready prompts** across 12 categories, each self-contained and written to fit the Analyze → Propose → Approve → Implement → Test → Review discipline:
 
 | Category | Count |
 |---|---|
@@ -146,13 +147,20 @@ All 12 skills live in [`.claude/skills/`](.claude/skills/), each a `SKILL.md`-de
 
 ## Demo projects
 
-Three independently buildable projects under [`demos/`](demos/) exercise the framework's patterns end to end, with real automated test suites (79/79 tests passing across all three, independently verified — see [`docs/PRODUCTION-READINESS-AUDIT.md`](docs/PRODUCTION-READINESS-AUDIT.md)):
+Three independently buildable projects under [`demos/`](demos/) exercise the framework's patterns end to end, with real automated test suites (95/95 tests passing across all three, independently verified — see [`docs/PRODUCTION-READINESS-AUDIT.md`](docs/PRODUCTION-READINESS-AUDIT.md) and the audit-fix pass that followed it):
 
 | Demo | What it demonstrates | Tests |
 |---|---|---|
-| [Demo 1 — ASP.NET Core + EF Core API](demos/Demo1-AspNetCore-EFCore-API/README.md) | A task-tracker Web API with EF Core Code-First against SQL Server/LocalDB and a SignalR hub broadcasting task status changes | 21/21 passing |
-| [Demo 2 — Blazor + SignalR Dashboard](demos/Demo2-Blazor-SignalR-Dashboard/README.md) | A Blazor Server live-ops dashboard built on a shared Razor Class Library, with metrics pushed over a strongly-typed SignalR hub | 15/15 passing |
-| [Demo 3 — MVC + Power Platform Integration](demos/Demo3-MVC-PowerPlatform-Integration/README.md) | An ASP.NET Core MVC client-reporting portal with mock-now/real-later integration seams for Power BI embedding, SharePoint/Graph documents, and a Power Apps-connector-shaped API | 43/43 passing |
+| [Demo 1 — ASP.NET Core + EF Core API](demos/Demo1-AspNetCore-EFCore-API/README.md) | A task-tracker Web API with EF Core Code-First against SQL Server/LocalDB and a SignalR hub broadcasting task status changes | 22/22 passing |
+| [Demo 2 — Blazor + SignalR Dashboard](demos/Demo2-Blazor-SignalR-Dashboard/README.md) | A Blazor Server live-ops dashboard built on a shared Razor Class Library, with metrics pushed over a strongly-typed SignalR hub | 27/27 passing |
+| [Demo 3 — MVC + Power Platform Integration](demos/Demo3-MVC-PowerPlatform-Integration/README.md) | An ASP.NET Core MVC client-reporting portal with mock-now/real-later integration seams for Power BI embedding, SharePoint/Graph documents, and a Power Apps-connector-shaped API | 46/46 passing |
+
+<p>
+  <img src="demos/Demo2-Blazor-SignalR-Dashboard/screenshots/dashboard-mockup.svg" alt="Illustrative mockup of the Live Ops Dashboard" width="49%">
+  <img src="demos/Demo3-MVC-PowerPlatform-Integration/screenshots/dashboard-mockup.svg" alt="Illustrative mockup of the Client Reporting Portal" width="49%">
+</p>
+
+*Both images are hand-drawn illustrative mockups of the page layouts, not real screenshots — run either demo locally (see its own README) to see the actual live UI.*
 
 ## Supported technologies
 
@@ -175,13 +183,13 @@ Dotsquares-AI-Engineering-Platform/
 ├── .claude/
 │   ├── CLAUDE.md              Platform-level project instructions (read first)
 │   ├── agents/                16 specialized subagents (11 stack-specific + 5 cross-cutting)
-│   └── skills/                12 enforced-workflow slash commands (SKILL.md per skill)
+│   └── skills/                13 enforced-workflow slash commands (SKILL.md per skill)
 ├── demos/
 │   ├── Demo1-AspNetCore-EFCore-API/
 │   ├── Demo2-Blazor-SignalR-Dashboard/
 │   └── Demo3-MVC-PowerPlatform-Integration/
 ├── docs/                      Setup, process, and security documentation
-├── prompts/                   217 categorized, copy-paste-ready prompts + README index
+├── prompts/                   218 categorized, copy-paste-ready prompts + README index
 ├── templates/                 CLAUDE.md templates, baselines, checklists, starter-project scaffolds
 ├── wiki/                      Architecture overview, coding standards, integration guides
 ├── CHANGELOG.md

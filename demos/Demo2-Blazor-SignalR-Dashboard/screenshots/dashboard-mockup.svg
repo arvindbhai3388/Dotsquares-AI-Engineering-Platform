@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="620" viewBox="0 0 1000 620" font-family="Segoe UI, Arial, sans-serif">
+  <rect width="1000" height="620" fill="#f4f6f8"/>
+
+  <!-- Mockup disclaimer banner -->
+  <rect x="0" y="0" width="1000" height="28" fill="#7a1f1f"/>
+  <text x="500" y="19" text-anchor="middle" fill="#ffffff" font-size="13" font-weight="bold" letter-spacing="0.5">
+    ILLUSTRATIVE MOCKUP — NOT AN ACTUAL SCREENSHOT
+  </text>
+
+  <!-- Top bar -->
+  <rect x="0" y="28" width="1000" height="56" fill="#1f2937"/>
+  <text x="24" y="63" fill="#ffffff" font-size="20" font-weight="bold">Live Ops Dashboard</text>
+  <rect x="900" y="46" width="76" height="24" rx="12" fill="#16a34a"/>
+  <circle cx="914" cy="58" r="4" fill="#ffffff"/>
+  <text x="924" y="62" fill="#ffffff" font-size="12" font-weight="bold">LIVE</text>
+
+  <!-- Metric cards -->
+  <g>
+    <rect x="24" y="108" width="296" height="140" rx="10" fill="#ffffff" stroke="#e2e8f0"/>
+    <text x="48" y="140" fill="#64748b" font-size="13" font-weight="bold" letter-spacing="0.5">CPU</text>
+    <text x="48" y="188" fill="#0f172a" font-size="40" font-weight="bold">35.4%</text>
+    <text x="48" y="216" fill="#dc2626" font-size="14">▼ trending down</text>
+  </g>
+
+  <g>
+    <rect x="352" y="108" width="296" height="140" rx="10" fill="#ffffff" stroke="#e2e8f0"/>
+    <text x="376" y="140" fill="#64748b" font-size="13" font-weight="bold" letter-spacing="0.5">ACTIVE USERS</text>
+    <text x="376" y="188" fill="#0f172a" font-size="40" font-weight="bold">113</text>
+    <text x="376" y="216" fill="#16a34a" font-size="14">▲ trending up</text>
+  </g>
+
+  <g>
+    <rect x="680" y="108" width="296" height="140" rx="10" fill="#ffffff" stroke="#e2e8f0"/>
+    <text x="704" y="140" fill="#64748b" font-size="13" font-weight="bold" letter-spacing="0.5">ERROR RATE</text>
+    <text x="704" y="188" fill="#0f172a" font-size="40" font-weight="bold">0.95%</text>
+    <text x="704" y="216" fill="#16a34a" font-size="14">▲ within threshold</text>
+  </g>
+
+  <!-- Recent events panel -->
+  <rect x="24" y="272" width="952" height="320" rx="10" fill="#ffffff" stroke="#e2e8f0"/>
+  <text x="48" y="304" fill="#0f172a" font-size="16" font-weight="bold">Recent Events</text>
+
+  <g font-size="13" fill="#334155">
+    <text x="48" y="340">14:44:09  ·  Active users: 109</text>
+    <line x1="48" y1="350" x2="928" y2="350" stroke="#f1f5f9"/>
+    <text x="48" y="374">14:44:04  ·  CPU normalized to 35.4%</text>
+    <line x1="48" y1="384" x2="928" y2="384" stroke="#f1f5f9"/>
+    <text x="48" y="408">14:43:59  ·  Active users: 113</text>
+    <line x1="48" y1="418" x2="928" y2="418" stroke="#f1f5f9"/>
+    <text x="48" y="442">14:43:54  ·  Error rate 0.95% (info)</text>
+    <line x1="48" y1="452" x2="928" y2="452" stroke="#f1f5f9"/>
+    <text x="48" y="476">14:43:49  ·  Active users: 108</text>
+  </g>
+
+  <text x="48" y="572" fill="#94a3b8" font-size="12">
+    Represents the layout of the live SignalR-driven dashboard (MetricCard / LiveFeed / StatusBadge components). Run the demo locally for the real thing — see this folder's README.
+  </text>
+</svg>

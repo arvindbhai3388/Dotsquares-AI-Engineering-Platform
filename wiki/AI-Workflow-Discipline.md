@@ -61,6 +61,38 @@ The discipline above is not just documentation — it is encoded as executable w
 
 Because these are skills rather than informal habits, invoking `/new-feature`, `/unit-testing`, `/code-review`, or `/build-validation` reliably produces the same sequence of gates regardless of which developer or which client project is running it — which is the entire point of standardizing this across 50+ developers.
 
+## Streamlined mode — a single Yes/No carries through to Review
+
+The six steps above are always followed in order — this section changes *how much the developer
+has to say*, not which steps happen. By default, each step is visible and the developer can weigh
+in at any of them. A developer who has already decided a proposal is right can instead give **one
+Yes/No answer at Approve**, and have Implement → Test → Review proceed without further per-step
+check-ins, ending in a single final report.
+
+**How to invoke it:** after a plan is presented at Approve, say something like "yes, go ahead
+through review" instead of approving one step at a time. The agent then runs Implement, Test, and
+Review back-to-back and reports the combined result once, rather than pausing after each.
+
+**What streamlined mode does not change:**
+- Analyze and Propose still happen first, in full, before the Yes/No is asked for — this mode
+  compresses the *back half* of the sequence, never the investigation/proposal that makes the
+  Yes/No meaningful in the first place.
+- **Never auto-commits, pushes, or opens a pull request.** A single "yes, go ahead through review"
+  authorizes Implement/Test/Review only — committing/pushing remains a separate, explicit request
+  every time, per this platform's Git Rules. Do not read "yes" as blanket approval for every later
+  action in the same session.
+- If reality diverges from the approved plan mid-implementation (a false assumption surfaces, an
+  unexpected file needs touching), the agent still pauses and reconciles with the developer rather
+  than silently improvising past the point the original Yes/No actually covered.
+- Destructive, high-blast-radius, or scope-expanding actions still get their own explicit check,
+  even inside a streamlined run — a single upfront "yes" to a plan is not standing authorization for
+  something the plan didn't describe.
+
+**When not to use it:** anything genuinely risky, unfamiliar, or where the developer wants to sanity-
+check an intermediate result (e.g., the actual diff before it's tested, or the test output before
+review) — streamlined mode trades that visibility for speed, so use the default step-by-step mode
+whenever that visibility is worth more than the time saved.
+
 ## Related pages
 
 - [Architecture Overview](Architecture-Overview.md) — the layered model this discipline is applied against.

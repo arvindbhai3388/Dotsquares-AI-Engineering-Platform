@@ -44,6 +44,18 @@ Alongside `CLAUDE.md`, a new client project should also start from this repo's p
 
 If the client project also needs Claude Code wired up to an external system (an issue tracker, a wiki) via MCP, see [MCP Setup](MCP-Setup.md) for the equivalent credential-free starting point (`templates/mcp-baseline.json`).
 
+## Running the post-integration setup prompt
+
+Immediately after copying `CLAUDE.md`, the permissions baseline, and/or specific agents/skills into
+the client project (the two sections above), run
+[`prompts/architecture-and-planning/verify-platform-integration-after-copy.md`](../prompts/architecture-and-planning/verify-platform-integration-after-copy.md)
+as your very first Claude Code session in that project. It checks the copy for you instead of
+leaving verification to memory: it lists every `<PLACEHOLDER>` still unfilled, cross-checks the
+copied agents/skills against the project's actual `.csproj`/`.sln` stack and flags anything that
+doesn't apply, and identifies anything critical the project's real stack needs that wasn't copied.
+It's read-only by design — it reports a checklist and stops, it doesn't fill placeholders or delete
+files on its own.
+
 ## First Claude Code session walkthrough
 
 With the client project cloned and its `CLAUDE.md` in place:

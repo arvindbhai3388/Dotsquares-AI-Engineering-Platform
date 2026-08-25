@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="640" viewBox="0 0 1000 640" font-family="Segoe UI, Arial, sans-serif">
+  <rect width="1000" height="640" fill="#f4f6f8"/>
+
+  <!-- Mockup disclaimer banner -->
+  <rect x="0" y="0" width="1000" height="28" fill="#7a1f1f"/>
+  <text x="500" y="19" text-anchor="middle" fill="#ffffff" font-size="13" font-weight="bold" letter-spacing="0.5">
+    ILLUSTRATIVE MOCKUP — NOT AN ACTUAL SCREENSHOT
+  </text>
+
+  <!-- Top nav -->
+  <rect x="0" y="28" width="1000" height="52" fill="#1e3a5f"/>
+  <text x="24" y="61" fill="#ffffff" font-size="18" font-weight="bold">Client Reporting Portal</text>
+  <text x="640" y="61" fill="#cbd5e1" font-size="14">Dashboard</text>
+  <rect x="632" y="70" width="80" height="3" fill="#60a5fa"/>
+  <text x="742" y="61" fill="#94a3b8" font-size="14">Documents</text>
+  <text x="850" y="61" fill="#94a3b8" font-size="14">Admin</text>
+
+  <!-- Power BI embed placeholder -->
+  <rect x="24" y="104" width="608" height="330" rx="10" fill="#ffffff" stroke="#e2e8f0"/>
+  <text x="48" y="136" fill="#0f172a" font-size="16" font-weight="bold">Power BI Report (embedded — mock)</text>
+  <rect x="48" y="156" width="560" height="256" rx="6" fill="#eef2ff" stroke="#c7d2fe" stroke-dasharray="6,4"/>
+  <text x="328" y="270" text-anchor="middle" fill="#6366f1" font-size="14">IPowerBiEmbedService → MockPowerBiEmbedService</text>
+  <text x="328" y="292" text-anchor="middle" fill="#94a3b8" font-size="12">(real report renders here once wired to Power BI REST API)</text>
+
+  <!-- Documents panel -->
+  <rect x="656" y="104" width="320" height="330" rx="10" fill="#ffffff" stroke="#e2e8f0"/>
+  <text x="680" y="136" fill="#0f172a" font-size="16" font-weight="bold">Documents (mock)</text>
+  <g font-size="12" fill="#334155">
+    <text x="680" y="168">📄 Q3-Client-Summary.docx</text>
+    <text x="680" y="192">📄 Renewal-Contract.pdf</text>
+    <text x="680" y="216">📄 Onboarding-Checklist.xlsx</text>
+    <text x="680" y="240">📄 Meeting-Notes-Aug.docx</text>
+  </g>
+  <text x="680" y="410" fill="#94a3b8" font-size="11">ISharePointDocumentService → MockSharePointDocumentService</text>
+
+  <!-- Bottom status strip -->
+  <rect x="24" y="452" width="952" height="140" rx="10" fill="#ffffff" stroke="#e2e8f0"/>
+  <text x="48" y="484" fill="#0f172a" font-size="16" font-weight="bold">Admin — active service bindings</text>
+  <g font-size="13" fill="#334155">
+    <text x="48" y="516">Power BI:     MockPowerBiEmbedService     (real implementation not wired — zero external calls)</text>
+    <text x="48" y="542">SharePoint:   MockSharePointDocumentService (real implementation not wired — zero external calls)</text>
+    <text x="48" y="568">Tasks API:    InMemoryTaskService           (Power Apps connector-shaped surface, see /swagger)</text>
+  </g>
+
+  <text x="48" y="620" fill="#94a3b8" font-size="12">
+    Represents the MVC portal's actual page layout and mock/real service seams. Run the demo locally for the real thing — see this folder's README.
+  </text>
+</svg>

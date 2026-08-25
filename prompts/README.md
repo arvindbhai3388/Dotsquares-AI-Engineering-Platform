@@ -1,6 +1,6 @@
 # Prompt Library
 
-217 copy-paste-ready prompts for Claude Code, organized by stack/category. Every prompt is a self-contained instruction you can paste directly into a Claude Code session on a real client project. Each is written to fit this framework's core discipline:
+218 copy-paste-ready prompts for Claude Code, organized by stack/category. Every prompt is a self-contained instruction you can paste directly into a Claude Code session on a real client project. Each is written to fit this framework's core discipline:
 
 ```
 Analyze → Propose → Approve → Implement → Test → Review
@@ -30,9 +30,9 @@ Most implementation prompts ask Claude to propose an approach and get your sign-
 | SharePoint (Microsoft Graph) | [`sharepoint/`](sharepoint/) | 16 | Graph SDK CRUD, large file upload, delta queries, webhooks, throttling |
 | Power Apps / Power Platform | [`powerapps/`](powerapps/) | 16 | Dataverse plugins, custom connectors, canvas/model-driven apps, ALM |
 | Code Review & Testing | [`code-review-and-testing/`](code-review-and-testing/) | 21 | xUnit/MSTest/Moq, WebApplicationFactory, security review, flaky tests, coverage |
-| Architecture & Planning | [`architecture-and-planning/`](architecture-and-planning/) | 12 | Implementation plans, ADRs, migration strategy, multi-tenancy design |
+| Architecture & Planning | [`architecture-and-planning/`](architecture-and-planning/) | 13 | Implementation plans, ADRs, migration strategy, multi-tenancy design, post-copy integration verification |
 
-**Total: 217 prompts.**
+**Total: 218 prompts.**
 
 ---
 
@@ -288,3 +288,4 @@ Most implementation prompts ask Claude to propose an approach and get your sign-
 - [plan-zero-downtime-deployment.md](architecture-and-planning/plan-zero-downtime-deployment.md)
 - [evaluate-event-driven-vs-request-response.md](architecture-and-planning/evaluate-event-driven-vs-request-response.md)
 - [produce-onboarding-doc-for-new-developer.md](architecture-and-planning/produce-onboarding-doc-for-new-developer.md)
+- [verify-platform-integration-after-copy.md](architecture-and-planning/verify-platform-integration-after-copy.md)

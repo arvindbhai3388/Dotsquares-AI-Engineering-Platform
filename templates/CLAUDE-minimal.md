@@ -40,6 +40,9 @@ for this project — `Understand`/`Locate` correspond to `Analyze`, `Plan` to `P
   (`<test framework>`). Skip only if no test project exists yet — ask before adding one.
 - **Validate:** run `<BUILD_COMMAND>` / `<TEST_COMMAND>`. Never claim a build/test passed
   without actually running it.
+- **QA Artifacts (optional):** set `<QA_ARTIFACTS_FOLDER>` to an absolute path outside this
+  repo to have `qa-test-tracking` auto-save/update an Excel test-case workbook there at Plan
+  and Validate time. Leave unset to skip.
 - **Review:** check correctness, security, nullability, error handling, backward
   compatibility, and unintended changes. See `code-review-checklist.md`.
 

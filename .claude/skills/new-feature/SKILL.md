@@ -69,7 +69,10 @@ is the client-repo-facing copy of this same gate; keep the two in sync if either
   stated explicitly.
 - The test strategy: which test project, which framework (detect, don't
   assume — see the unit-testing skill), which scenarios need coverage
-  (success, validation failure, authorization failure, cancellation).
+  (success, validation failure, authorization failure, cancellation). If
+  this project has configured `<QA_ARTIFACTS_FOLDER>`, hand this strategy
+  to the `qa-test-tracking` skill to save the planned test cases to the
+  manual-QA workbook before Implement begins.
 - Any new dependency being introduced, with justification (per the
   platform's dependency-decision principle: prefer existing capabilities
   first).
@@ -89,6 +92,10 @@ is the client-repo-facing copy of this same gate; keep the two in sync if either
   isn't available, make the plan explicit in output before implementing,
   so the approval step is at minimum visible and reviewable after the
   fact, and proceed only as far as the task's own instructions authorize.
+- The developer may approve with a single Yes/No that carries through
+  Implement → Test → Review without further per-step check-ins — see
+  `wiki/AI-Workflow-Discipline.md`'s "Streamlined mode" for exactly what
+  that does and does not authorize (it never covers commit/push).
 
 ## Step 5 — Implement
 
@@ -112,6 +119,9 @@ is the client-repo-facing copy of this same gate; keep the two in sync if either
   add cancellation-token coverage for async APIs that accept one.
 - Confirm new tests fail for the right reason before the implementation
   exists (if genuinely done Test-First), then pass once it's complete.
+- If a `qa-test-tracking` workbook was created at Plan time, update it now
+  with real Actual Result/Pass-Fail values from the test run just
+  performed — never from assumption.
 
 ## Step 7 — Review
 

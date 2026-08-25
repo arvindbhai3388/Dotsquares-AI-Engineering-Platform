@@ -4,6 +4,14 @@ All notable changes to the Dotsquares AI Engineering Platform are recorded here.
 
 This file does not follow a strict Semantic Versioning contract (there is no published package to version) — version numbers here mark platform-level milestones, mainly to give client projects a stable reference point to diff against.
 
+## [1.1.0] - QA tracking, streamlined approval, post-copy verification
+
+- **New skill:** `qa-test-tracking` — optional Excel manual-QA workbook, auto-saved with planned test cases at Plan time and auto-updated with real Pass/Fail results at Validate time (never marking a case Pass without an actual test run). Opt in per project via the new `<QA_ARTIFACTS_FOLDER>` placeholder in `templates/CLAUDE-full.md`/`CLAUDE-minimal.md`.
+- **New workflow mode:** "Streamlined mode" documented in `wiki/AI-Workflow-Discipline.md` — a developer can give a single Yes/No at Approve that carries through Implement → Test → Review without further per-step check-ins. Never covers commit/push, which remains a separate explicit request every time.
+- **New prompt:** `prompts/architecture-and-planning/verify-platform-integration-after-copy.md` — run immediately after copying platform files into a client project; cross-checks the copy against the project's real stack and reports what's missing/unfillable/inapplicable, without modifying anything itself. Referenced from `docs/Getting-Started.md`.
+- `new-feature` skill updated to cross-reference both of the above at the relevant steps (Plan/Validate for `qa-test-tracking`, Approve for streamlined mode).
+- Prompt count: 217 → 218. Skill count: 12 → 13.
+
 ## [1.0.0] - Initial release
 
 Initial release of the platform:
