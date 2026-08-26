@@ -11,10 +11,11 @@ Dotsquares delivers .NET solutions across 50+ developers and many concurrent cli
 
 ## Key capabilities
 
-- **16 specialized agents** (`.claude/agents/`) — one per supported .NET stack plus cross-cutting agents for architecture analysis, code review, security review, unit testing, and build validation.
-- **13 enforced-workflow skills** (`.claude/skills/`) — slash-command workflows that walk a task through the platform's Analyze → Propose → Approve → Implement → Test → Review discipline instead of leaving it to individual discretion, with an optional streamlined single-approval mode and an optional Excel-based manual-QA tracking skill.
+- **19 specialized agents** (`.claude/agents/`) — one per supported .NET stack plus cross-cutting agents for architecture analysis, code review, security review, performance review, production safety, quality-gate aggregation, unit testing, and build validation.
+- **16 enforced-workflow skills** (`.claude/skills/`) — slash-command workflows that walk a task through the platform's Analyze → Propose → Approve → Implement → Test → Review discipline instead of leaving it to individual discretion, with an optional streamlined single-approval mode and an optional Excel-based manual-QA tracking skill.
+- **An optional hooks-based technical backstop** (`templates/hooks/`) — a restricted-files guard enforced by a script, not just an instruction, for a project that wants that extra layer.
 - **218 copy-paste-ready prompts** (`prompts/`) across 12 stack/category directories, each written to fit the same workflow discipline.
-- **Project bootstrap templates** (`templates/`) — `CLAUDE.md` starting points, a permissions baseline, an MCP baseline, review checklists, and 12 per-stack starter-project scaffolds.
+- **Project bootstrap templates** (`templates/`) — `CLAUDE.md` starting points, a permissions baseline, an MCP baseline, a restricted-files hook, review checklists, and 12 per-stack starter-project scaffolds.
 - **3 independently buildable demo projects** (`demos/`) exercising the framework's patterns end to end, with real, passing automated test suites.
 - **A non-negotiable workflow discipline** — `Analyze → Propose → Approve → Implement → Test → Review` — applied consistently across agents, skills, prompts, and templates.
 
@@ -98,7 +99,7 @@ graph LR
 
 ## Agents
 
-All 16 agents live in [`.claude/agents/`](.claude/agents/).
+All 19 agents live in [`.claude/agents/`](.claude/agents/).
 
 **Stack-specific (11)**
 
@@ -116,19 +117,22 @@ All 16 agents live in [`.claude/agents/`](.claude/agents/).
 | [`sharepoint-developer`](.claude/agents/sharepoint-developer.md) | SharePoint / Microsoft Graph |
 | [`powerapps-developer`](.claude/agents/powerapps-developer.md) | Power Apps / Power Platform |
 
-**Cross-cutting (5)**
+**Cross-cutting (8)**
 
 | Agent | Purpose |
 |---|---|
 | [`architecture-analyst`](.claude/agents/architecture-analyst.md) | Explains a flow or feature across layers/projects |
 | [`code-reviewer`](.claude/agents/code-reviewer.md) | Reviews a diff against the platform's standards |
 | [`security-reviewer`](.claude/agents/security-reviewer.md) | Auth, secrets, and injection-focused review |
+| [`performance-reviewer`](.claude/agents/performance-reviewer.md) | N+1 queries, blocking calls, missing pagination, caching gaps |
+| [`production-safety`](.claude/agents/production-safety.md) | Production-readiness gate for database/API/auth changes — has authority to BLOCK |
+| [`quality-gate`](.claude/agents/quality-gate.md) | Aggregates the other reviewers into one PASS/WARN/FAIL |
 | [`unit-test-writer`](.claude/agents/unit-test-writer.md) | Writes/updates tests (Test-First and Validate) |
 | [`build-validator`](.claude/agents/build-validator.md) | Final build/test gate with the correct toolchain |
 
 ## Skills
 
-All 13 skills live in [`.claude/skills/`](.claude/skills/), each a `SKILL.md`-defined slash-command workflow.
+All 16 skills live in [`.claude/skills/`](.claude/skills/), each a `SKILL.md`-defined slash-command workflow.
 
 | Skill | Purpose |
 |---|---|
@@ -138,6 +142,9 @@ All 13 skills live in [`.claude/skills/`](.claude/skills/), each a `SKILL.md`-de
 | [`qa-test-tracking`](.claude/skills/qa-test-tracking/) | Optional Excel manual-QA workbook, auto-saved at Plan and auto-updated with real results at Validate |
 | [`architecture-analysis`](.claude/skills/architecture-analysis/) | Scopes which layers/projects a task actually touches |
 | [`build-validation`](.claude/skills/build-validation/) | Final build/test gate before a change is called done |
+| [`performance-review`](.claude/skills/performance-review/) | Targeted performance pass — not run on every routine change |
+| [`production-safety-check`](.claude/skills/production-safety-check/) | Production-readiness gate for high-risk changes — can BLOCK |
+| [`quality-gate`](.claude/skills/quality-gate/) | Aggregates all review results into one PASS/WARN/FAIL |
 | [`documentation`](.claude/skills/documentation/) | Keeps project documentation in sync with a source change |
 | [`efcore-migration`](.claude/skills/efcore-migration/) | EF Core migration workflow |
 | [`blazor-component`](.claude/skills/blazor-component/) | Blazor component scaffolding/testing workflow |
@@ -172,6 +179,7 @@ All 13 skills live in [`.claude/skills/`](.claude/skills/), each a `SKILL.md`-de
 - **`CLAUDE-full.md`** / **`CLAUDE-minimal.md`** — project-instruction templates for a long-lived multi-stack engagement versus a small, short-lived, single-stack one.
 - **`permissions-baseline.json`** — a starting `.claude/settings.json` allow/ask/deny baseline.
 - **`mcp-baseline.json`** — a credential-free starting point for wiring Claude Code to external systems on a client project.
+- **`hooks/protected-file-guard.ps1`** — a restricted-files guard enforced by a Claude Code `PreToolUse` hook, not just a `CLAUDE.md` instruction. See [Hooks Setup](docs/Hooks-Setup.md).
 - **`code-review-checklist.md`**, **`pre-implementation-checklist.md`**, **`production-readiness-checklist.md`** — standing checklists for review and readiness gates.
 - **`PR-description-template.md`** — a pull-request description template.
 - **`starter-projects/`** — 12 per-stack scaffolds (Blazor gets two — Server and WebAssembly — covering the 11 supported stacks).
@@ -213,15 +221,15 @@ Three independently buildable projects under [`demos/`](demos/) exercise the fra
 Dotsquares-AI-Engineering-Platform/
 ├── .claude/
 │   ├── CLAUDE.md              Platform-level project instructions (read first)
-│   ├── agents/                16 specialized subagents (11 stack-specific + 5 cross-cutting)
-│   └── skills/                13 enforced-workflow slash commands (SKILL.md per skill)
+│   ├── agents/                19 specialized subagents (11 stack-specific + 8 cross-cutting)
+│   └── skills/                16 enforced-workflow slash commands (SKILL.md per skill)
 ├── demos/
 │   ├── Demo1-AspNetCore-EFCore-API/
 │   ├── Demo2-Blazor-SignalR-Dashboard/
 │   └── Demo3-MVC-PowerPlatform-Integration/
 ├── docs/                      Setup, process, and security documentation
 ├── prompts/                   218 categorized, copy-paste-ready prompts + README index
-├── templates/                 CLAUDE.md templates, baselines, checklists, starter-project scaffolds
+├── templates/                 CLAUDE.md templates, baselines, a hooks guard, checklists, starter-project scaffolds
 ├── wiki/                      Architecture overview, coding standards, integration guides
 ├── CHANGELOG.md
 ├── CONTRIBUTING.md
@@ -248,7 +256,7 @@ This repository itself is not a client codebase — it is adopted by *copying* t
 
 ## Claude Code setup
 
-Once Claude Code is installed, it discovers this repository's `.claude/agents` and `.claude/skills` automatically. For installation, the permissions model, and how agents/skills are discovered, see [`docs/Claude-Code-Setup.md`](docs/Claude-Code-Setup.md). For connecting Claude Code to external systems (issue trackers, wikis) on a client project, see [`docs/MCP-Setup.md`](docs/MCP-Setup.md).
+Once Claude Code is installed, it discovers this repository's `.claude/agents` and `.claude/skills` automatically. For installation, the permissions model, and how agents/skills are discovered, see [`docs/Claude-Code-Setup.md`](docs/Claude-Code-Setup.md). For connecting Claude Code to external systems (issue trackers, wikis) on a client project, see [`docs/MCP-Setup.md`](docs/MCP-Setup.md). For enforcing a project's restricted-files list by script instead of instruction alone, see [`docs/Hooks-Setup.md`](docs/Hooks-Setup.md).
 
 ## Usage examples
 
@@ -266,7 +274,7 @@ This is Dotsquares-internal tooling, not an open-source project accepting extern
 
 ## Security
 
-See [`docs/Security-Guidelines.md`](docs/Security-Guidelines.md) for the platform's secrets-handling policy, least-privilege scope guidance for Microsoft Graph/Power Platform integrations, and the restricted-files pattern used on client projects. There is no `SECURITY.md` at the repository root yet — it may be added separately; until then, `docs/Security-Guidelines.md` is the authoritative reference. Report a security concern to the framework's maintainers at Dotsquares rather than filing a public issue.
+See [`SECURITY.md`](SECURITY.md) for how to report a security concern, and [`docs/Security-Guidelines.md`](docs/Security-Guidelines.md) for the platform's secrets-handling policy, least-privilege scope guidance for Microsoft Graph/Power Platform integrations, and the restricted-files pattern used on client projects (optionally enforced by a script — see [`docs/Hooks-Setup.md`](docs/Hooks-Setup.md)). Report a security concern to the framework's maintainers at Dotsquares rather than filing a public issue.
 
 ## Roadmap
 

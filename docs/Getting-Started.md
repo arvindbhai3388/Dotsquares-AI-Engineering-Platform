@@ -44,6 +44,10 @@ Alongside `CLAUDE.md`, a new client project should also start from this repo's p
 
 If the client project also needs Claude Code wired up to an external system (an issue tracker, a wiki) via MCP, see [MCP Setup](MCP-Setup.md) for the equivalent credential-free starting point (`templates/mcp-baseline.json`).
 
+## Adding a hooks-based technical backstop (optional)
+
+`CLAUDE.md`'s restricted-files section is a strong convention, but it's still an instruction Claude has to follow correctly every time. For a project that wants that enforced by a script instead, see [Hooks Setup](Hooks-Setup.md) for how to adapt `templates/hooks/protected-file-guard.ps1` — it blocks a matching `Read`/`Edit`/`Write` call outright, fails open on any error, and never edits/commits/pushes anything itself.
+
 ## Running the post-integration setup prompt
 
 Immediately after copying `CLAUDE.md`, the permissions baseline, and/or specific agents/skills into
@@ -70,6 +74,7 @@ With the client project cloned and its `CLAUDE.md` in place:
 
 - [Claude Code Setup](Claude-Code-Setup.md) — permissions model and settings detail.
 - [MCP Setup](MCP-Setup.md) — connecting Claude Code to external systems on a client project.
+- [Hooks Setup](Hooks-Setup.md) — enforcing the restricted-files list by script, not just instruction.
 - [wiki/Home.md](../wiki/Home.md) — full index of standards and integration guides.
 - [wiki/AI-Workflow-Discipline.md](../wiki/AI-Workflow-Discipline.md) — the process this whole walkthrough is built around.
 - [wiki/Multi-Project-Multi-Developer-Guide.md](../wiki/Multi-Project-Multi-Developer-Guide.md) — read this once you're assigned to more than one project, or a second developer joins yours.

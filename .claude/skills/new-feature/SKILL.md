@@ -130,9 +130,19 @@ is the client-repo-facing copy of this same gate; keep the two in sync if either
   maintainability, backward compatibility, unintended changes).
 - Run (or hand off to) `security-reviewer` if the feature touches auth,
   external input, deserialization, outbound calls, or secrets.
+- Run (or hand off to) `performance-reviewer` if the feature touches a
+  hot path, a new query pattern, or an external call in a loop — not
+  every change needs this, only ones with real performance surface.
+- Run (or hand off to) `production-safety` for a production/database/
+  auth/major-API/critical-integration/large-refactor/high-risk change —
+  it has authority to BLOCK; do not consider the feature done over its
+  objection.
 - Run (or hand off to) `build-validator` to actually build/test the
   affected project(s) with the correct toolchain before calling the
   feature done.
+- For the final answer, `quality-gate` can aggregate all of the above
+  into one PASS/WARN/FAIL instead of relaying each reviewer's output
+  separately.
 - Report back clearly what was verified and what wasn't (e.g., "unit
   tests pass; did not verify against a live SharePoint tenant since
   demos use a mock client").

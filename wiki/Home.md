@@ -50,6 +50,7 @@ The `docs/` folder covers process and setup rather than technical standards:
 | [Getting Started](../docs/Getting-Started.md) | Prerequisites, cloning a client project, dropping in the right `templates/CLAUDE.md`, first Claude Code session walkthrough. |
 | [Claude Code Setup](../docs/Claude-Code-Setup.md) | Installing Claude Code, `.claude/settings.json` basics, the permissions model, how agents/skills are discovered. |
 | [MCP Setup](../docs/MCP-Setup.md) | What MCP is in this platform's context, why credentials stay per-client-project, and how to adapt `templates/mcp-baseline.json` for a new client repo. |
+| [Hooks Setup](../docs/Hooks-Setup.md) | What a Claude Code hook is, and how to adapt `templates/hooks/protected-file-guard.ps1` to enforce a project's restricted-files list by script, not just by instruction. |
 | [Security Guidelines](../docs/Security-Guidelines.md) | Secrets handling, least-privilege scopes for Graph/Power Platform, the restricted-files pattern for client projects. |
 | [FAQ](../docs/FAQ.md) | Common questions about scope, ownership of AI output, and adapting the framework to a client's existing conventions. |
 

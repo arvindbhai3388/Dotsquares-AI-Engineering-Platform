@@ -4,6 +4,15 @@ All notable changes to the Dotsquares AI Engineering Platform are recorded here.
 
 This file does not follow a strict Semantic Versioning contract (there is no published package to version) — version numbers here mark platform-level milestones, mainly to give client projects a stable reference point to diff against.
 
+## [1.2.0] - Performance/production-safety review, quality-gate aggregation, hooks template
+
+- **New agents:** `performance-reviewer` (N+1 queries, blocking calls, missing pagination, caching gaps — generic across all 11 supported stacks), `production-safety` (database/schema, restricted-config, breaking-API, auth, logging, external-integration, backward-compatibility, and rollback checks — has authority to BLOCK), `quality-gate` (aggregates build-validator/code-reviewer/security-reviewer/performance-reviewer/production-safety into one PASS/WARN/FAIL).
+- **New skills:** `performance-review`, `production-safety-check`, `quality-gate` — thin delegating wrappers matching the existing agent pattern.
+- **New hooks template:** `templates/hooks/protected-file-guard.ps1` — a `PreToolUse` hook that enforces a project's restricted-files list by script (fails open on any error, only ever blocks/warns, never edits/commits/pushes). See `docs/Hooks-Setup.md`.
+- `new-feature` skill's Review step updated to reference all three new agents/skills.
+- Fixed a stale claim in `README.md`'s Security section (said "no `SECURITY.md` yet" — it existed since the platform's GitHub publication).
+- Agent count: 16 → 19. Skill count: 13 → 16.
+
 ## [1.1.0] - QA tracking, streamlined approval, post-copy verification
 
 - **New skill:** `qa-test-tracking` — optional Excel manual-QA workbook, auto-saved with planned test cases at Plan time and auto-updated with real Pass/Fail results at Validate time (never marking a case Pass without an actual test run). Opt in per project via the new `<QA_ARTIFACTS_FOLDER>` placeholder in `templates/CLAUDE-full.md`/`CLAUDE-minimal.md`.
