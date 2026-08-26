@@ -49,6 +49,28 @@ Claude Code's permission system governs which tool calls require explicit human 
 - A client project can define its **own** agents/skills under its own `.claude/` directory, which take precedence for that project over anything generic — this is the intended mechanism for a client project to encode conventions specific to itself (a particular internal library, an unusual deployment process) without needing to fork this platform repo.
 - This platform repository's own `.claude/agents` and `.claude/skills` are the shared, cross-client baseline — see the [Architecture Overview](../wiki/Architecture-Overview.md) for how each stack agent maps onto a layer of a typical solution.
 
+## Custom slash commands (`.claude/commands/`)
+
+Distinct from skills. A **skill** (`.claude/skills/<name>/SKILL.md`) can also be invoked as
+`/<name>`, but it's primarily *auto-triggered* — Claude Code matches your request against its
+description and can decide to use it even if you never typed the slash command. A **custom
+command** (`.claude/commands/<name>.md`) only ever runs when you explicitly type `/<name>` — it's
+a fixed prompt template (with an optional `$ARGUMENTS` placeholder for whatever you type after
+the command name), not something Claude decides to reach for on its own.
+
+This platform ships three commands as thin, explicit routing shortcuts over the existing
+agents/skills — deliberately lightweight (no status-tracking files, no persistent dashboard,
+no task-classification engine):
+
+| Command | Use for |
+|---|---|
+| `/fastfix <description>` | A small, low-risk, obvious fix — shortened investigation, but Test and Review are never skipped. |
+| `/safefeature <description>` | A production/database/auth/major-API/critical-integration/high-risk change — the full pipeline, mandatory `production-safety` + `quality-gate`, no Streamlined-mode shortcut. |
+| `/review [files/PR]` | Runs `code-review` always, plus `security-review`/`performance-review` only where the diff actually touches that surface, synthesized by `quality-gate`. |
+
+A client project can add its own commands under its own `.claude/commands/` the same way it can
+add its own agents/skills — these three are a starting set, not an exhaustive one.
+
 ## Verifying your setup
 
 After installing and cloning a client project, confirm:

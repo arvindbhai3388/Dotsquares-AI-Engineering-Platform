@@ -13,6 +13,7 @@ Dotsquares delivers .NET solutions across 50+ developers and many concurrent cli
 
 - **19 specialized agents** (`.claude/agents/`) — one per supported .NET stack plus cross-cutting agents for architecture analysis, code review, security review, performance review, production safety, quality-gate aggregation, unit testing, and build validation.
 - **16 enforced-workflow skills** (`.claude/skills/`) — slash-command workflows that walk a task through the platform's Analyze → Propose → Approve → Implement → Test → Review discipline instead of leaving it to individual discretion, with an optional streamlined single-approval mode and an optional Excel-based manual-QA tracking skill.
+- **3 custom commands** (`.claude/commands/`) — explicit, never-auto-triggered routing shortcuts (`/fastfix`, `/safefeature`, `/review`) over the same agents/skills, distinct from skills' auto-trigger behavior.
 - **An optional hooks-based technical backstop** (`templates/hooks/`) — a restricted-files guard enforced by a script, not just an instruction, for a project that wants that extra layer.
 - **218 copy-paste-ready prompts** (`prompts/`) across 12 stack/category directories, each written to fit the same workflow discipline.
 - **Project bootstrap templates** (`templates/`) — `CLAUDE.md` starting points, a permissions baseline, an MCP baseline, a restricted-files hook, review checklists, and 12 per-stack starter-project scaffolds.
@@ -153,6 +154,16 @@ All 16 skills live in [`.claude/skills/`](.claude/skills/), each a `SKILL.md`-de
 | [`sharepoint-integration`](.claude/skills/sharepoint-integration/) | SharePoint/Graph integration workflow |
 | [`powerapps-connector`](.claude/skills/powerapps-connector/) | Power Apps custom connector workflow |
 
+## Custom commands
+
+Distinct from skills — a command in [`.claude/commands/`](.claude/commands/) only runs when explicitly typed as `/<name>`, it's never auto-triggered the way a skill can be. Three lightweight routing shortcuts ship with the platform (no status-tracking files, no dashboard, no task-classification engine — see [`docs/Claude-Code-Setup.md`](docs/Claude-Code-Setup.md#custom-slash-commands-claudecommands) for the skills-vs-commands distinction):
+
+| Command | Use for |
+|---|---|
+| [`/fastfix`](.claude/commands/fastfix.md) | A small, low-risk, obvious fix — shortened investigation, Test/Review never skipped |
+| [`/safefeature`](.claude/commands/safefeature.md) | Production/database/auth/major-API/high-risk change — full pipeline, mandatory `production-safety` + `quality-gate`, no shortcut |
+| [`/review`](.claude/commands/review.md) | `code-review` always, plus `security-review`/`performance-review` only where relevant, synthesized by `quality-gate` |
+
 ## Prompt library
 
 [`prompts/README.md`](prompts/README.md) indexes **218 copy-paste-ready prompts** across 12 categories, each self-contained and written to fit the Analyze → Propose → Approve → Implement → Test → Review discipline:
@@ -222,7 +233,8 @@ Dotsquares-AI-Engineering-Platform/
 ├── .claude/
 │   ├── CLAUDE.md              Platform-level project instructions (read first)
 │   ├── agents/                19 specialized subagents (11 stack-specific + 8 cross-cutting)
-│   └── skills/                16 enforced-workflow slash commands (SKILL.md per skill)
+│   ├── skills/                16 enforced-workflow slash commands (SKILL.md per skill)
+│   └── commands/               3 explicit, non-auto-triggered routing shortcuts
 ├── demos/
 │   ├── Demo1-AspNetCore-EFCore-API/
 │   ├── Demo2-Blazor-SignalR-Dashboard/

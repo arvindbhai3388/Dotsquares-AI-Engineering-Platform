@@ -4,6 +4,14 @@ All notable changes to the Dotsquares AI Engineering Platform are recorded here.
 
 This file does not follow a strict Semantic Versioning contract (there is no published package to version) — version numbers here mark platform-level milestones, mainly to give client projects a stable reference point to diff against.
 
+## [1.3.0] - Custom slash commands
+
+- **New:** `.claude/commands/` — a distinct mechanism from skills; a command only runs when explicitly typed as `/<name>`, never auto-triggered the way a skill can be. Three lightweight routing shortcuts ship with the platform, deliberately without a status-tracking file, dashboard, or task-classification engine:
+  - `/fastfix` — small, low-risk, obvious fix; shortened investigation, Test/Review never skipped.
+  - `/safefeature` — production/database/auth/major-API/critical-integration/high-risk change; full pipeline, mandatory `production-safety` + `quality-gate`, no Streamlined-mode shortcut.
+  - `/review` — `code-review` always, plus `security-review`/`performance-review` only where the diff actually touches that surface, synthesized by `quality-gate`.
+- Documented in `docs/Claude-Code-Setup.md` (new "Custom slash commands" section, explaining the skills-vs-commands distinction) and `README.md`.
+
 ## [1.2.0] - Performance/production-safety review, quality-gate aggregation, hooks template
 
 - **New agents:** `performance-reviewer` (N+1 queries, blocking calls, missing pagination, caching gaps — generic across all 11 supported stacks), `production-safety` (database/schema, restricted-config, breaking-API, auth, logging, external-integration, backward-compatibility, and rollback checks — has authority to BLOCK), `quality-gate` (aggregates build-validator/code-reviewer/security-reviewer/performance-reviewer/production-safety into one PASS/WARN/FAIL).
