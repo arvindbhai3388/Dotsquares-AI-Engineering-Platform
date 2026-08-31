@@ -11,12 +11,12 @@ Dotsquares delivers .NET solutions across 50+ developers and many concurrent cli
 
 ## Key capabilities
 
-- **19 specialized agents** (`.claude/agents/`) — one per supported .NET stack plus cross-cutting agents for architecture analysis, code review, security review, performance review, production safety, quality-gate aggregation, unit testing, and build validation.
-- **16 enforced-workflow skills** (`.claude/skills/`) — slash-command workflows that walk a task through the platform's Analyze → Propose → Approve → Implement → Test → Review discipline instead of leaving it to individual discretion, with an optional streamlined single-approval mode and an optional Excel-based manual-QA tracking skill.
+- **21 specialized agents** (`.claude/agents/`) — one per supported stack (including React and Angular) plus cross-cutting agents for architecture analysis, code review, security review, performance review, production safety, quality-gate aggregation, unit testing, and build validation.
+- **18 enforced-workflow skills** (`.claude/skills/`) — slash-command workflows that walk a task through the platform's Analyze → Propose → Approve → Implement → Test → Review discipline instead of leaving it to individual discretion, with an optional streamlined single-approval mode and an optional Excel-based manual-QA tracking skill.
 - **3 custom commands** (`.claude/commands/`) — explicit, never-auto-triggered routing shortcuts (`/fastfix`, `/safefeature`, `/review`) over the same agents/skills, distinct from skills' auto-trigger behavior.
 - **An optional hooks-based technical backstop** (`templates/hooks/`) — a restricted-files guard enforced by a script, not just an instruction, for a project that wants that extra layer.
-- **218 copy-paste-ready prompts** (`prompts/`) across 12 stack/category directories, each written to fit the same workflow discipline.
-- **Project bootstrap templates** (`templates/`) — `CLAUDE.md` starting points, a permissions baseline, an MCP baseline, a restricted-files hook, review checklists, and 12 per-stack starter-project scaffolds.
+- **250 copy-paste-ready prompts** (`prompts/`) across 14 stack/category directories, each written to fit the same workflow discipline.
+- **Project bootstrap templates** (`templates/`) — `CLAUDE.md` starting points, a permissions baseline, an MCP baseline, a restricted-files hook, review checklists, and 14 per-stack starter-project scaffolds.
 - **3 independently buildable demo projects** (`demos/`) exercising the framework's patterns end to end, with real, passing automated test suites.
 - **A non-negotiable workflow discipline** — `Analyze → Propose → Approve → Implement → Test → Review` — applied consistently across agents, skills, prompts, and templates.
 
@@ -27,7 +27,7 @@ Most Dotsquares .NET client engagements, regardless of front-end stack, converge
 ```mermaid
 graph TD
     subgraph L1["Layer 1 — Presentation"]
-        P1["ASP.NET Core MVC / Razor Pages<br/>Blazor Server / Blazor WASM<br/>Umbraco / Power Apps canvas apps"]
+        P1["ASP.NET Core MVC / Razor Pages<br/>Blazor Server / Blazor WASM<br/>Umbraco / Power Apps canvas apps<br/>React / Angular (SPA, own repo)"]
     end
     subgraph L2["Layer 2 — Application / Services"]
         P2["Use-case orchestration, DTOs/view models,<br/>validation, authorization, background jobs,<br/>SignalR hubs"]
@@ -41,11 +41,11 @@ graph TD
 
     L1 --> L2 --> L3 --> L4
 
-    A1["aspnet-core-developer<br/>mvc-developer<br/>razor-pages-developer<br/>blazor-developer<br/>umbraco-developer<br/>powerapps-developer"] -.-> L1
+    A1["aspnet-core-developer<br/>mvc-developer<br/>razor-pages-developer<br/>blazor-developer<br/>umbraco-developer<br/>powerapps-developer<br/>react-developer<br/>angular-developer"] -.-> L1
     A2["aspnet-core-developer (services)<br/>signalr-developer<br/>unit-test-writer"] -.-> L2
     A3["efcore-developer"] -.-> L3
     A4["sql-server-developer<br/>sharepoint-developer<br/>powerbi-developer<br/>powerapps-developer"] -.-> L4
-    A5["Cross-cutting: architecture-analyst · code-reviewer<br/>security-reviewer · build-validator"] -.-> L1 & L2 & L3 & L4
+    A5["Cross-cutting: architecture-analyst · code-reviewer<br/>security-reviewer · performance-reviewer<br/>production-safety · quality-gate · build-validator"] -.-> L1 & L2 & L3 & L4
 ```
 
 ## AI SDLC workflow
@@ -100,9 +100,9 @@ graph LR
 
 ## Agents
 
-All 19 agents live in [`.claude/agents/`](.claude/agents/).
+All 21 agents live in [`.claude/agents/`](.claude/agents/).
 
-**Stack-specific (11)**
+**Stack-specific (13)**
 
 | Agent | Stack |
 |---|---|
@@ -110,6 +110,8 @@ All 19 agents live in [`.claude/agents/`](.claude/agents/).
 | [`mvc-developer`](.claude/agents/mvc-developer.md) | ASP.NET MVC |
 | [`razor-pages-developer`](.claude/agents/razor-pages-developer.md) | Razor Pages |
 | [`blazor-developer`](.claude/agents/blazor-developer.md) | Blazor (Server & WebAssembly) |
+| [`react-developer`](.claude/agents/react-developer.md) | React (paired with an ASP.NET Core Web API) |
+| [`angular-developer`](.claude/agents/angular-developer.md) | Angular (paired with an ASP.NET Core Web API) |
 | [`umbraco-developer`](.claude/agents/umbraco-developer.md) | Umbraco CMS |
 | [`efcore-developer`](.claude/agents/efcore-developer.md) | Entity Framework Core |
 | [`sql-server-developer`](.claude/agents/sql-server-developer.md) | SQL Server |
@@ -133,7 +135,7 @@ All 19 agents live in [`.claude/agents/`](.claude/agents/).
 
 ## Skills
 
-All 16 skills live in [`.claude/skills/`](.claude/skills/), each a `SKILL.md`-defined slash-command workflow.
+All 18 skills live in [`.claude/skills/`](.claude/skills/), each a `SKILL.md`-defined slash-command workflow.
 
 | Skill | Purpose |
 |---|---|
@@ -149,6 +151,8 @@ All 16 skills live in [`.claude/skills/`](.claude/skills/), each a `SKILL.md`-de
 | [`documentation`](.claude/skills/documentation/) | Keeps project documentation in sync with a source change |
 | [`efcore-migration`](.claude/skills/efcore-migration/) | EF Core migration workflow |
 | [`blazor-component`](.claude/skills/blazor-component/) | Blazor component scaffolding/testing workflow |
+| [`react-component`](.claude/skills/react-component/) | React component scaffolding/testing workflow |
+| [`angular-component`](.claude/skills/angular-component/) | Angular standalone-component scaffolding/testing workflow |
 | [`signalr-hub`](.claude/skills/signalr-hub/) | SignalR hub design/testing workflow |
 | [`powerbi-embed`](.claude/skills/powerbi-embed/) | Power BI embedded analytics workflow |
 | [`sharepoint-integration`](.claude/skills/sharepoint-integration/) | SharePoint/Graph integration workflow |
@@ -166,13 +170,15 @@ Distinct from skills — a command in [`.claude/commands/`](.claude/commands/) o
 
 ## Prompt library
 
-[`prompts/README.md`](prompts/README.md) indexes **218 copy-paste-ready prompts** across 12 categories, each self-contained and written to fit the Analyze → Propose → Approve → Implement → Test → Review discipline:
+[`prompts/README.md`](prompts/README.md) indexes **250 copy-paste-ready prompts** across 14 categories, each self-contained and written to fit the Analyze → Propose → Approve → Implement → Test → Review discipline:
 
 | Category | Count |
 |---|---|
 | [ASP.NET Core](prompts/aspnet-core/) | 24 |
 | [ASP.NET MVC / Razor Pages](prompts/mvc-razor/) | 16 |
 | [Blazor](prompts/blazor/) | 21 |
+| [React](prompts/react/) | 16 |
+| [Angular](prompts/angular/) | 16 |
 | [Umbraco CMS](prompts/umbraco/) | 16 |
 | [Entity Framework Core](prompts/efcore/) | 22 |
 | [SQL Server](prompts/sql-server/) | 21 |
@@ -181,7 +187,7 @@ Distinct from skills — a command in [`.claude/commands/`](.claude/commands/) o
 | [SharePoint (Microsoft Graph)](prompts/sharepoint/) | 16 |
 | [Power Apps / Power Platform](prompts/powerapps/) | 16 |
 | [Code Review & Testing](prompts/code-review-and-testing/) | 21 |
-| [Architecture & Planning](prompts/architecture-and-planning/) | 12 |
+| [Architecture & Planning](prompts/architecture-and-planning/) | 13 |
 
 ## Templates
 
@@ -193,7 +199,7 @@ Distinct from skills — a command in [`.claude/commands/`](.claude/commands/) o
 - **`hooks/protected-file-guard.ps1`** — a restricted-files guard enforced by a Claude Code `PreToolUse` hook, not just a `CLAUDE.md` instruction. See [Hooks Setup](docs/Hooks-Setup.md).
 - **`code-review-checklist.md`**, **`pre-implementation-checklist.md`**, **`production-readiness-checklist.md`** — standing checklists for review and readiness gates.
 - **`PR-description-template.md`** — a pull-request description template.
-- **`starter-projects/`** — 12 per-stack scaffolds (Blazor gets two — Server and WebAssembly — covering the 11 supported stacks).
+- **`starter-projects/`** — 14 per-stack scaffolds (Blazor gets two — Server and WebAssembly — covering the 13 supported stacks).
 
 ## Demo projects
 
@@ -218,6 +224,8 @@ Three independently buildable projects under [`demos/`](demos/) exercise the fra
 - ASP.NET MVC
 - Razor Pages
 - Blazor (Server & WebAssembly)
+- React (paired with an ASP.NET Core Web API)
+- Angular (paired with an ASP.NET Core Web API)
 - Umbraco CMS
 - Entity Framework Core
 - SQL Server
@@ -232,15 +240,15 @@ Three independently buildable projects under [`demos/`](demos/) exercise the fra
 Dotsquares-AI-Engineering-Platform/
 ├── .claude/
 │   ├── CLAUDE.md              Platform-level project instructions (read first)
-│   ├── agents/                19 specialized subagents (11 stack-specific + 8 cross-cutting)
-│   ├── skills/                16 enforced-workflow slash commands (SKILL.md per skill)
+│   ├── agents/                21 specialized subagents (13 stack-specific + 8 cross-cutting)
+│   ├── skills/                18 enforced-workflow slash commands (SKILL.md per skill)
 │   └── commands/               3 explicit, non-auto-triggered routing shortcuts
 ├── demos/
 │   ├── Demo1-AspNetCore-EFCore-API/
 │   ├── Demo2-Blazor-SignalR-Dashboard/
 │   └── Demo3-MVC-PowerPlatform-Integration/
 ├── docs/                      Setup, process, and security documentation
-├── prompts/                   218 categorized, copy-paste-ready prompts + README index
+├── prompts/                   250 categorized, copy-paste-ready prompts + README index
 ├── templates/                 CLAUDE.md templates, baselines, a hooks guard, checklists, starter-project scaffolds
 ├── wiki/                      Architecture overview, coding standards, integration guides
 ├── CHANGELOG.md
@@ -290,7 +298,7 @@ See [`SECURITY.md`](SECURITY.md) for how to report a security concern, and [`doc
 
 ## Roadmap
 
-This platform currently covers 11 supported .NET/Microsoft stacks with a matching agent, skill coverage where applicable, wiki guidance, and starter scaffold. Additional stacks or stack versions may be added over time, following the process documented in [`docs/FAQ.md`](docs/FAQ.md) ("How do I add a new stack"), which also covers how already-onboarded client projects can pull in a platform update. See [`CHANGELOG.md`](CHANGELOG.md) for what has actually shipped.
+This platform currently covers 13 supported stacks (11 .NET/Microsoft plus React and Angular as frontend options paired with an ASP.NET Core Web API) with a matching agent, skill coverage where applicable, wiki guidance, and starter scaffold. Additional stacks or stack versions may be added over time, following the process documented in [`docs/FAQ.md`](docs/FAQ.md) ("How do I add a new stack"), which also covers how already-onboarded client projects can pull in a platform update. See [`CHANGELOG.md`](CHANGELOG.md) for what has actually shipped.
 
 ## License
 

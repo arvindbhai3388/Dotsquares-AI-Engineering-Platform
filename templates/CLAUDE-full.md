@@ -269,6 +269,26 @@ to resolve uncertainty, prevent a regression, or validate correctness.
 - Auth approach: `<PLACEHOLDER>`
 - Environment naming convention: `<PLACEHOLDER — e.g. Dev/Test/Prod environment IDs>`
 
+### 4.12 React
+
+- Build tooling: `<PLACEHOLDER — Vite, Next.js, Create React App>`
+- State management: `<PLACEHOLDER — built-in useState/useReducer only, or a library (Redux
+  Toolkit, Zustand) — and TanStack Query/SWR for server state, if used>`
+- Component convention: `<PLACEHOLDER — function components + hooks; TypeScript strictness
+  level>`
+- API base URL / auth token strategy: `<PLACEHOLDER>`
+- Testing: `<PLACEHOLDER — React Testing Library + Jest/Vitest>`
+
+### 4.13 Angular
+
+- Angular version and component style: `<PLACEHOLDER — standalone components (17+) or
+  NgModule-based; match whichever the existing codebase already uses>`
+- State management: `<PLACEHOLDER — signals, RxJS-based services, or a library (NgRx) — don't
+  introduce a second pattern into a project that's already settled on one>`
+- Forms strategy: `<PLACEHOLDER — Reactive Forms (default) vs. Template-driven>`
+- API base URL / auth interceptor strategy: `<PLACEHOLDER>`
+- Testing: `<PLACEHOLDER — Jasmine + Karma, or Jest if migrated>`
+
 ---
 
 ## 5. Task Execution Workflow

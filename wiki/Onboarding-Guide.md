@@ -31,6 +31,8 @@ You don't need every stack page — read the ones matching the client project(s)
 - Analytics/reporting embedded in the app → [Power BI Integration](PowerBI-Integration.md)
 - Document/content integration with Microsoft 365 → [SharePoint Integration](SharePoint-Integration.md)
 - Power Platform apps or connectors → [Power Apps Integration](PowerApps-Integration.md)
+- React front end (paired with an ASP.NET Core Web API) → [Coding Standards — React](Coding-Standards-React.md)
+- Angular front end (paired with an ASP.NET Core Web API) → [Coding Standards — Angular](Coding-Standards-Angular.md)
 
 While reading, keep the project's **own** `CLAUDE.md`/conventions open alongside — where the two disagree, the client project's own established conventions win (see [FAQ](../docs/FAQ.md)). This wiki is the default when a project hasn't already decided something for itself, not an override of what a project has already decided.
 

@@ -1,0 +1,14 @@
+# Add Route Guards for an Authenticated Section of the App
+
+**Category:** Angular
+**Use when:** A set of routes must be reachable only when the user is authenticated (and optionally, only with a specific role/permission).
+
+## Prompt
+
+Analyze how authentication state is currently exposed (a service holding a signal/`BehaviorSubject` of the current user, a token-presence check, or a call to a `/me` endpoint) and how routing is configured (`provideRouter(routes)` with a flat or nested route config, standalone `loadComponent`/`loadChildren`), then propose which routes need the guard, whether an "already logged in, block access to /login" reverse guard is also needed, and whether role/permission checks belong in the same guard or a separate one — wait for approval before implementing, since retrofitting a guard onto the wrong route boundary later usually means restructuring the route tree.
+
+Implement the guard as a functional guard (`CanActivateFn`, and `CanActivateChildFn` on the parent route if it protects a whole nested subtree) rather than the older class-based `CanActivate` interface, unless class-based guards are already the established pattern here. Use `inject()` inside the guard function to reach the auth service and `Router`. Have the guard read current auth state synchronously where possible (a signal or already-resolved value); if authentication state requires an async check (validating a token against the backend), return an `Observable<boolean | UrlTree>` and resolve it with `map`/`switchMap`, redirecting via a returned `UrlTree` (`inject(Router).createUrlTree([...])`) rather than manually calling `router.navigate()` and returning `false` — returning a `UrlTree` is the pattern the Router expects and it composes correctly with `resolve` guards and query-param preservation (e.g. a `returnUrl`).
+
+Apply the guard at the correct route boundary — on the parent route of a lazy-loaded feature section with `canActivateChild`, or per-route with `canActivate`, depending on what was approved — rather than duplicating the check inside every component's `ngOnInit`. If a role/permission check is needed, pass the required role via the route's `data` property and read it inside the guard with `route.data['role']`, so the same guard function is reusable across routes with different requirements instead of one guard per role.
+
+Write tests for the guard function directly (call it with a mocked `ActivatedRouteSnapshot`/`RouterStateSnapshot` and a stubbed auth service) covering: authenticated and authorized → `true`; unauthenticated → `UrlTree` pointing at login with the attempted URL preserved; authenticated but wrong role → `UrlTree` pointing at a forbidden/home route. Also add or confirm an integration-level test (via `RouterTestingHarness` or equivalent) that navigating to a guarded route while unauthenticated actually redirects.

@@ -4,6 +4,32 @@ All notable changes to the Dotsquares AI Engineering Platform are recorded here.
 
 This file does not follow a strict Semantic Versioning contract (there is no published package to version) — version numbers here mark platform-level milestones, mainly to give client projects a stable reference point to diff against.
 
+## [1.4.0] - React and Angular support (first frontend/JavaScript stacks)
+
+The platform's first non-.NET-ecosystem stacks — both assume the frontend is a separate SPA
+codebase talking to an ASP.NET Core Web API backend over HTTP, the same boundary Blazor
+WebAssembly already has with its backend.
+
+- **New agents:** `react-developer`, `angular-developer` (implementation agents covering
+  component design, state management, testing, API integration, and stack-specific security
+  pitfalls).
+- **New skills:** `react-component`, `angular-component` (scaffolding a new component end to
+  end, including a test).
+- **New wiki pages:** `wiki/Coding-Standards-React.md`, `wiki/Coding-Standards-Angular.md`.
+- **New starter-project templates:** `templates/starter-projects/react/`,
+  `templates/starter-projects/angular/`.
+- **New prompt categories:** `prompts/react/` (16 prompts), `prompts/angular/` (16 prompts).
+- **`wiki/Architecture-Overview.md`** updated: React/Angular added to the Layer 1 diagram and
+  agent-mapping table, plus a new CORS cross-cutting-concerns note — the first presentation
+  option on this platform with no server-rendered fallback.
+- **`templates/CLAUDE-full.md`** updated: new §4.12 (React) and §4.13 (Angular) stack-specific
+  placeholder sections.
+- Every full-stack-list mention across `.claude/CLAUDE.md`, `code-reviewer.md`,
+  `new-feature/SKILL.md`, `wiki/Onboarding-Guide.md`, and `README.md` updated to include
+  React/Angular — Power-Apps/SharePoint/PowerBI-specific narrow mentions were left untouched
+  since they don't enumerate the full stack list.
+- Counts: agents 19 → 21, skills 16 → 18, prompts 218 → 250, starter-project scaffolds 12 → 14.
+
 ## [1.3.0] - Custom slash commands
 
 - **New:** `.claude/commands/` — a distinct mechanism from skills; a command only runs when explicitly typed as `/<name>`, never auto-triggered the way a skill can be. Three lightweight routing shortcuts ship with the platform, deliberately without a status-tracking file, dashboard, or task-classification engine:

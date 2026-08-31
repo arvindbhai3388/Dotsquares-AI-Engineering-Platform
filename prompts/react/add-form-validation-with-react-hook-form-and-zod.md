@@ -1,0 +1,14 @@
+# Add Form Validation with React Hook Form and Zod
+
+**Category:** React
+**Use when:** A form has no validation, has validation scattered across ad hoc `onChange` handlers, or needs to match a new backend validation contract.
+
+## Prompt
+
+Before implementing, check whether `react-hook-form` and a schema library (`zod`, or whatever this project already uses — e.g. `yup`) are already dependencies, and look at one existing validated form in this codebase to match its conventions (schema location, error-message display pattern, submit-handling style). Propose the validation schema and field list before implementing, especially for any rule that needs to mirror server-side validation (e.g. an ASP.NET Core `[Required]`/`[MaxLength]`/`FluentValidation` rule) so the two don't drift — flag any rule you can't confirm without reading the backend validator, rather than guessing at the constraint.
+
+Define the schema with Zod (`z.object({...})`) as the single source of truth for both the TypeScript type (`z.infer<typeof schema>`) and the runtime validation, rather than maintaining a separate hand-written interface that can fall out of sync. Wire it into `useForm` via `zodResolver(schema)` from `@hookform/resolvers/zod`. Register fields with `register('fieldName')` for plain inputs, or `Controller` for controlled third-party components (date pickers, custom selects, rich-text editors) that don't expose a plain `ref`/`onChange`/`onBlur` triple compatible with `register`. Use `formState: { errors, isSubmitting }` to drive inline error messages (tied to each input via `aria-describedby` and `aria-invalid` for accessibility — see the accessibility-review prompt in this category) and to disable the submit button during submission rather than allowing double-submit.
+
+For cross-field validation (password confirmation, date-range ordering, at-least-one-of-N-fields), use Zod's `.refine()`/`.superRefine()` on the object schema rather than bespodging it into individual field-level checks. For async validation that requires a server round-trip (uniqueness checks, etc.), use `mode: 'onBlur'` or a debounced manual `trigger()` call rather than validating on every keystroke, and surface a distinct "checking..." state while the async check is in flight.
+
+On submit, call the mutation/API function inside `handleSubmit(onValid, onInvalid)` and handle a server-side validation error response (e.g. a 400 with field-level errors from ASP.NET Core's `ModelState`/`ProblemDetails`) by mapping it back onto the correct fields via `setError('fieldName', { message })` rather than only showing a generic toast. Write React Testing Library + `@testing-library/user-event` tests covering: valid submission calls the handler with the parsed/typed values, each required-field violation shows its error message, cross-field validation triggers correctly, and the submit button is disabled/re-enabled correctly around an async submission.

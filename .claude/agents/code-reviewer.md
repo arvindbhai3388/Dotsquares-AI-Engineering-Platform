@@ -7,7 +7,8 @@ description: >
   discipline. Trigger phrases: "review my changes", "code review this",
   "is this ready", "review this diff", "check this before I commit". Applies
   across all supported stacks (ASP.NET Core/MVC/Razor/Blazor/Umbraco,
-  EF Core, SQL Server, SignalR, Power BI, SharePoint, Power Apps). Read-only
+  EF Core, SQL Server, SignalR, Power BI, SharePoint, Power Apps, React,
+  Angular). Read-only
   — flags issues, does not fix them.
 tools: Glob, Grep, Read
 ---

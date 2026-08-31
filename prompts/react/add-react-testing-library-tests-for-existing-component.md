@@ -1,0 +1,14 @@
+# Write React Testing Library Tests for an Existing Untested Component
+
+**Category:** React
+**Use when:** A component currently has no automated test coverage and needs a baseline suite before further changes are made to it.
+
+## Prompt
+
+First, read the target component fully — its props, any hooks it calls (state, effects, context, custom hooks, data-fetching hooks), conditional render branches, and any child components it composes — and propose a test plan listing the scenarios you intend to cover (default render, each meaningful prop/state combination, conditional branches, user interactions, error/edge cases) before writing test code. Wait for my approval of the scenario list, especially for a component complex enough that "test everything" isn't a specific enough plan.
+
+Set up the test using this project's existing test runner (Vitest or Jest) and React Testing Library conventions already used elsewhere in the codebase (a shared custom `render` wrapper if one exists — e.g. one that wraps `QueryClientProvider`, a router, or theme/context providers — rather than reinventing one per test file). Query the rendered output the way a user would perceive it: `getByRole` (with an accessible name where relevant), `getByLabelText` for form fields, `getByText` for visible copy — reserve `getByTestId` for elements with no meaningful role or text. Use `queryBy*` (not `getBy*`) specifically when asserting something is absent, since `getBy*` throws instead of returning null.
+
+Simulate interactions with `@testing-library/user-event`'s async API (`await userEvent.click(...)`, `await userEvent.type(...)`) rather than `fireEvent`, since `user-event` more accurately fires the full sequence of real browser events (focus, keydown, input, etc.) that some components rely on. For anything async (data fetching, debounced input, animations), use `findBy*` queries or `waitFor` rather than an arbitrary `setTimeout`-based delay, and mock timers explicitly (`vi.useFakeTimers()`/`jest.useFakeTimers()`) if the component uses `setTimeout`/`setInterval`/debouncing, remembering to advance them inside `act()`.
+
+Mock external dependencies at the boundary, not internals: mock the network layer (`msw` if already used in this project, otherwise the fetch/axios call directly) rather than mocking a component's own internal functions, and mock only the specific child component if it's expensive/irrelevant to this test's purpose (e.g. a heavy chart library) rather than shallow-rendering everything. Do not test implementation details (internal state variable names, which specific hook was called) — assert on rendered output and user-observable behavior only, so the tests survive an internal refactor. Run the suite and confirm every new test passes, and check coverage of the branches identified in the plan, not just an overall percentage.

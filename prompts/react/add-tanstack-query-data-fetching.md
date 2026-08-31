@@ -1,0 +1,14 @@
+# Add TanStack Query for a New Data-Fetching Need
+
+**Category:** React
+**Use when:** A component needs to fetch from the ASP.NET Core API and the codebase either has no data-fetching library yet or is using ad hoc `useEffect` + `fetch`/`axios`.
+
+## Prompt
+
+First check whether `@tanstack/react-query` (or SWR, whichever this project already depends on) is already installed and whether a `QueryClientProvider` is already set up near the app root — propose adding the dependency and provider only if genuinely missing, since introducing a new data-fetching library is an architectural change worth a short justification, not something to do silently mid-feature. If a manual `useEffect` + `fetch` implementation already exists for this data, propose replacing it as part of this change and explain what problems it currently has (no caching, no dedupe of concurrent requests, no automatic retry/refetch-on-focus, manual loading/error state).
+
+Design the query around a stable, serializable query key that encodes every parameter the fetch depends on (e.g. `['orders', customerId, { status }]`) — an incomplete key is the most common source of stale-cache bugs. Extract the fetch into a typed async function returning the exact response shape from the API (define or reuse a TypeScript interface matching the ASP.NET Core DTO) and call it from `useQuery({ queryKey, queryFn })`. Set `staleTime`/`gcTime` deliberately based on how fresh this data needs to be, rather than leaving defaults unexamined, and disable the query with the `enabled` option when a required parameter (like an id) isn't yet available instead of guarding inside the query function.
+
+For any create/update/delete action tied to this data, use `useMutation` and invalidate the affected query key(s) via `queryClient.invalidateQueries({ queryKey })` in `onSuccess` (or wire up optimistic updates — see the separate optimistic-update prompt in this category if that's needed here). Surface `isPending`/`isLoading`, `isError`/`error`, and `data` from the hook directly into the component's render branches rather than re-deriving parallel state. Handle the case where the underlying `fetch`/`axios` call returns a non-2xx status by throwing inside the query function (TanStack Query treats a resolved promise as success regardless of HTTP status, so a non-throwing wrapper will silently hide API errors).
+
+Write tests using React Testing Library with a fresh `QueryClient` per test (`retry: false` in the test client's default options) wrapped via `QueryClientProvider`, and mock the network call (via `msw` if already used in this project, otherwise mock the fetch function directly) to cover: successful fetch render, loading state, and error state. Confirm no queries leak between tests by creating a new `QueryClient` in a `beforeEach`.

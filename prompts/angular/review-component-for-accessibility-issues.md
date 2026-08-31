@@ -1,0 +1,16 @@
+# Review a Component for Accessibility Issues
+
+**Category:** Angular
+**Use when:** Before shipping a new interactive component, or auditing an existing one that's never had an accessibility pass.
+
+## Prompt
+
+Review the component's template exclusively through an accessibility lens — don't comment on unrelated style or logic issues in this pass. Walk the template and check for:
+
+1. **Semantic HTML first** — a clickable `<div>`/`<span>` with a `(click)` handler that should be a `<button>`; a custom dropdown/tab/accordion built from generic elements when a native element or a well-established ARIA pattern would need far less custom keyboard handling; heading levels (`<h1>`-`<h6>`) that skip a level or aren't nested logically within the page.
+2. **ARIA usage** — missing `aria-label`/`aria-labelledby` on icon-only buttons and inputs without a visible/associated `<label>`; missing `role` on custom widgets that aren't native elements; `aria-expanded`/`aria-selected`/`aria-current`/`aria-live` not kept in sync with actual component state (a common Angular-specific bug: the ARIA attribute is set once in the template but never updated when the underlying signal/property changes); redundant or contradictory ARIA that fights the underlying semantic element instead of extending it.
+3. **Keyboard navigation** — every interactive element reachable and operable via `Tab`/`Shift+Tab` without a mouse; custom widgets (menus, modals, comboboxes) implementing the expected key bindings (`Enter`/`Space` to activate, arrow keys within a composite widget, `Escape` to close) via `(keydown)` handlers, not just `(click)`; a logical, unbroken tab order (flag any explicit `tabindex` greater than 0, which breaks natural order — `tabindex="0"` or `"-1"` only); focus correctly moved into a newly opened modal/drawer and returned to the triggering element on close, rather than left stranded or reset to the document body.
+4. **Forms** — every input has a programmatically associated label (`<label for>` or `aria-labelledby`, not just placeholder text); validation errors announced to assistive tech (`aria-describedby` pointing at the error message, or an `aria-live` region) rather than conveyed by color/icon alone; required fields marked with `aria-required`/`required`, not just a visual asterisk.
+5. **Visual/content** — meaningful images have `alt` text and purely decorative ones have `alt=""`; color is not the only signal for state (error/success/selected) — check pass/fail is also conveyed via text or icon shape; visible focus indicator not suppressed (`outline: none` without a replacement focus style).
+
+For each finding, cite the exact template line, explain which user/assistive-technology combination it breaks for (e.g. "screen reader users can't tell this button is currently pressed" is actionable; "not accessible" is not), and propose the smallest fix — usually a native element swap, an added ARIA attribute bound to existing state, or a `(keydown.enter)`/`(keydown.escape)` handler. If nothing significant is wrong, say so rather than inventing marginal nitpicks. Follow analyze -> propose -> approve: list findings and proposed fixes and wait for approval before editing the template.

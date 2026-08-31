@@ -11,6 +11,8 @@ Most Dotsquares .NET client engagements — regardless of which front-end stack 
 │ 1. Presentation                                              │
 │    ASP.NET Core MVC / Razor Pages / Blazor Server / Blazor   │
 │    WASM / Umbraco (rendered views) / Power Apps canvas apps  │
+│    / React / Angular (SPA clients consuming layer 2 as an    │
+│    ASP.NET Core Web API)                                      │
 ├─────────────────────────────────────────────────────────────┤
 │ 2. Application / Services                                    │
 │    Use-case orchestration, DTOs/view models, validation,     │
@@ -38,6 +40,7 @@ This is the layer most affected by stack choice:
 - **Blazor WebAssembly** — presentation logic and a trimmed .NET runtime run client-side in the browser sandbox; it talks to layer 2 only through HTTP APIs, never via a shared in-process `DbContext`.
 - **Umbraco CMS** — presentation is a hybrid: Umbraco's own rendering pipeline (Razor views bound to content models) for editor-managed pages, plus conventional MVC/API controllers ("surface controllers"/"API controllers") for anything transactional.
 - **Power Apps canvas apps** — presentation lives outside the .NET solution entirely, in Power Apps Studio, and talks to layer 2/4 through custom connectors or Dataverse directly.
+- **React / Angular** — presentation lives entirely outside the .NET solution, as a separate SPA codebase (its own repo or a sibling folder), talking to layer 2 exclusively over HTTP as an ASP.NET Core Web API — never a shared in-process `DbContext`, the same boundary Blazor WebAssembly already has with the backend. This is the platform's only presentation option with no server-rendered fallback: layer 2 must expose a real API surface, not just support one incidentally. See [Coding Standards — React](Coding-Standards-React.md) / [Coding Standards — Angular](Coding-Standards-Angular.md).
 
 ### Layer 2 — Application / Services
 
@@ -57,7 +60,7 @@ The platform's stack-specific agents are scoped to the layer(s) they're expert i
 
 | Layer | Relevant agents |
 |---|---|
-| Presentation | `aspnet-core-developer`, `mvc-developer`, `razor-pages-developer`, `blazor-developer`, `umbraco-developer`, `powerapps-developer` |
+| Presentation | `aspnet-core-developer`, `mvc-developer`, `razor-pages-developer`, `blazor-developer`, `umbraco-developer`, `powerapps-developer`, `react-developer`, `angular-developer` |
 | Application/Services | `aspnet-core-developer` (API/service layer), `signalr-developer` (hubs), cross-cutting `unit-test-writer` |
 | Data Access | `efcore-developer` |
 | External Integrations | `sql-server-developer`, `sharepoint-developer`, `powerbi-developer`, `powerapps-developer` |
@@ -70,6 +73,7 @@ When a task spans layers — e.g., "add a document upload feature that stores me
 - **Authentication/authorization** — typically ASP.NET Core Identity, Azure AD/Entra ID, or a client's existing IdP, enforced at layer 1 (attributes/policies) but defined once and reused, not duplicated per controller.
 - **Logging/observability** — `ILogger<T>` with structured logging, flowing through all layers; never logging secrets (see [Security Guidelines](../docs/Security-Guidelines.md)).
 - **Configuration** — `IOptions<T>` bound from `appsettings.json`/environment/user-secrets, injected wherever needed rather than read ad hoc from `IConfiguration` deep in business logic.
+- **CORS** — only relevant once a presentation layer runs on a different origin than the API (React, Angular, and Blazor WebAssembly all qualify): configure an explicit allow-list of origins on the ASP.NET Core API, never a wildcard `AllowAnyOrigin()` alongside credentialed requests — this is a real, not theoretical, security boundary between the SPA and the API.
 
 ## Related pages
 

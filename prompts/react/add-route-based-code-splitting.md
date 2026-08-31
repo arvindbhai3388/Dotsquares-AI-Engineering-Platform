@@ -1,0 +1,14 @@
+# Add Route-Based Code Splitting and Lazy Loading
+
+**Category:** React
+**Use when:** The initial bundle is too large, a route is rarely visited but always shipped upfront, or a new heavy route/feature is being added.
+
+## Prompt
+
+First identify the router this project uses (React Router, TanStack Router, or Next.js's file-based routing) and how routes are currently registered, since the lazy-loading mechanism differs by router — propose the specific approach for this codebase before implementing rather than defaulting to a generic pattern. Identify which routes/components are actually worth splitting: large, infrequently-visited routes (admin panels, settings, reporting/export screens, anything pulling in a heavy third-party library like a chart or rich-text editor) benefit most; do not split every route indiscriminately, since excessive chunking adds request overhead for little gain on small components.
+
+For React Router (v6.4+ data routers or plain `<Routes>`), convert the target route's component import to `React.lazy(() => import('./RoutePage'))` and wrap the route element (or the router outlet region) in a `<Suspense fallback={...}>` with a real loading UI, not `null` — a blank screen during a chunk fetch reads as broken. If using a data router with `loader`s, consider whether the route's data loader should also be deferred/colocated with the lazy import so data-fetching and code-fetching happen in parallel rather than sequentially. For Next.js (App Router or Pages Router), prefer `next/dynamic` for client-only heavy components within a page, and rely on Next's automatic per-route code splitting for page-level splitting rather than manually wrapping page components in `React.lazy`.
+
+Handle the loading-chunk-failure case: a stale deployed client trying to fetch a chunk that no longer exists after a new deploy will throw inside `React.lazy`'s dynamic import — wrap the lazy boundary in an error boundary (see this category's error-boundary prompt) that detects a chunk-load failure specifically (e.g. matching the error message/name) and prompts a full page reload rather than showing a generic crash screen. Preload likely-next routes on hover/intent where it meaningfully improves perceived performance (e.g. prefetching the import on a nav link's `onMouseEnter`), but don't over-engineer this for low-traffic routes.
+
+Verify the split actually took effect by checking the production build output (bundle analyzer, or the build tool's chunk list) shows a separate chunk for the route, not everything still bundled together. Write a test (or note if the existing router's test setup makes this awkward) confirming the lazy route still renders correctly by awaiting the `Suspense` fallback to resolve (`findBy*` queries), and confirm the Suspense fallback itself renders when the import is artificially delayed in a test.

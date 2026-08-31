@@ -1,0 +1,14 @@
+# Write TestBed Tests for an Existing Untested Component
+
+**Category:** Angular
+**Use when:** A component currently has no automated test coverage and needs a baseline test suite before further changes.
+
+## Prompt
+
+First, read the target component fully — its inputs/outputs (decorator-based or signal-based `input()`/`output()`), injected services, lifecycle hooks (`ngOnInit`, `ngOnChanges`, `ngAfterViewInit`, `ngOnDestroy`), and any `HttpClient`/`Router`/`ActivatedRoute`/third-party service dependencies — and propose a test plan listing the scenarios you intend to cover (render with default/required inputs, render across each meaningful input variation, output emission on user interaction, conditional template branches, async data-loading states, cleanup on destroy) before writing test code. Wait for my approval of the scenario list.
+
+Set up `TestBed.configureTestingModule({ imports: [ComponentUnderTest, ...anyStandaloneDependencies] })` — a standalone component's own dependencies are imported, not declared — and provide mocked services via `providers: [{ provide: RealService, useValue: mockService }]` or Jasmine/Jest spies (match whichever mocking style — spy objects vs. a mocking library — is already dominant in this codebase's existing specs). For a component that injects `HttpClient`, provide `provideHttpClientTesting()` and drive responses through `HttpTestingController` rather than mocking `HttpClient` directly. For a component reading route params, provide a stub `ActivatedRoute` with the `paramMap`/`data` shape it expects.
+
+Write tests using Arrange/Act/Assert: create the fixture with `TestBed.createComponent(ComponentUnderTest)`, set inputs via `fixture.componentRef.setInput(...)` (never assign directly to a signal-based `input()` property — it's read-only from outside), call `fixture.detectChanges()` to run initial change detection, then assert via `fixture.debugElement.query(By.css(...))`/`fixture.nativeElement.querySelector(...)`. For an output, subscribe to it (or spy on `.emit`) before triggering the interaction (`fixture.debugElement.query(By.css('button')).triggerEventHandler('click', null)` or a real `.click()` on the native element) and assert the emitted value. For async operations, use `fakeAsync`/`tick()` or `waitForAsync`/`fixture.whenStable()` consistently with the rest of the suite, and flush any pending `HttpTestingController` requests explicitly.
+
+Cover the `ngOnDestroy` cleanup path if the component manages subscriptions/timers — call `fixture.destroy()` and assert cleanup occurred. Do not test Angular framework behavior itself (that inputs bind, that `@if` toggles the DOM) — focus on this component's own branching and logic. Run the test file and confirm every new test passes, and that at least one assertion in each test would actually fail if the corresponding logic were broken (avoid vacuous tests that pass regardless of implementation).

@@ -1,0 +1,17 @@
+# Review a Diff for Angular-Specific Security Issues
+
+**Category:** Angular
+**Use when:** A PR touches rendering of dynamic/user-supplied content, URL handling, or anything using `DomSanitizer`.
+
+## Prompt
+
+Review the attached diff (or the currently staged/uncommitted changes) exclusively through a security lens specific to Angular's rendering and sanitization model. Do not comment on style or unrelated maintainability issues in this pass. Walk the diff hunk by hunk and check for:
+
+1. **`DomSanitizer.bypassSecurityTrust*` misuse** — any new call to `bypassSecurityTrustHtml`, `bypassSecurityTrustScript`, `bypassSecurityTrustStyle`, `bypassSecurityTrustUrl`, or `bypassSecurityTrustResourceUrl`. Each one is an explicit opt-out of Angular's XSS protection for that value — flag every call and trace the value back to its source: if any part of it derives from user input, a URL query/fragment parameter, or an external API response rather than a fully static/developer-controlled string, this is a real XSS vector regardless of how the value looks today, because the bypass doesn't re-check the value at render time.
+2. **Raw DOM manipulation bypassing Angular's binding** — direct `ElementRef.nativeElement.innerHTML`/`outerHTML` assignment, or a `Renderer2` call that injects raw HTML, instead of Angular's interpolation/property binding (which auto-escapes) or `[innerHTML]` with sanitization left intact (i.e. not paired with a `bypassSecurityTrustHtml` on the same value).
+3. **Unsafe URL bindings** — `[href]`/`[src]` bound to a value built from user input without going through Angular's own URL sanitization (which happens automatically unless bypassed per #1) — specifically watch for `javascript:` URL injection via a user-controlled `[href]`, and for a `[src]` on an `<iframe>` pointed at a user-supplied or query-string-derived origin without an allowlist check.
+4. **Client-side route/query trust** — a route param, query param, or fragment value used directly to construct a URL for navigation, an API call, or a sanitizer-bypassed render without validation; an open-redirect pattern where a `returnUrl`/`redirectTo` query param is passed straight to `Router.navigateByUrl()` without confirming it's an internal, relative path.
+5. **Secrets and environment leakage** — API keys, tokens, or backend-only secrets newly added to `environment.ts`/`environment.prod.ts` or any file that ships to the browser bundle (everything under `src/` ships client-side — there's no server-only secret storage in a pure Angular SPA); anything logged to `console.*` that includes a token, password, or full API response containing PII.
+6. **Third-party/dynamic script loading** — a new `<script>` tag or dynamic `document.createElement('script')` pointed at a non-pinned or user-influenceable URL, and any new dependency on `eval`/`new Function(...)` for parsing data that could instead use `JSON.parse`.
+
+For each finding, cite the exact file and line, trace the data flow from source to sink to show it's exploitable (not just "this pattern is generally risky"), rate severity, and propose the smallest fix — usually removing the bypass and using safe binding instead, or adding an allowlist/validation check before the bypass if it's genuinely still needed. If nothing in the diff introduces a security issue, say so explicitly. Follow analyze -> propose -> approve: present findings and proposed fixes, then wait for approval before editing any code.

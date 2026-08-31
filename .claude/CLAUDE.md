@@ -18,8 +18,9 @@ This repository is a reusable AI SDLC framework for Dotsquares .NET delivery tea
 
 | Path | Contents |
 |---|---|
-| `.claude/agents/` | One Markdown subagent definition per stack (ASP.NET Core, MVC, Razor Pages, Blazor, Umbraco, EF Core, SQL Server, SignalR, Power BI, SharePoint, Power Apps) plus cross-cutting agents (code-reviewer, architecture-analyst, unit-test-writer, security-reviewer, build-validator). |
-| `.claude/skills/` | Slash-command workflows (`SKILL.md` each) for recurring tasks: new-feature, code-review, unit-testing, architecture-analysis, build-validation, documentation, and stack-specific workflows (EF Core migrations, Blazor components, SignalR hubs, Power BI embedding, SharePoint/Graph integration, Power Apps connectors). |
+| `.claude/agents/` | One Markdown subagent definition per stack (ASP.NET Core, MVC, Razor Pages, Blazor, Umbraco, EF Core, SQL Server, SignalR, Power BI, SharePoint, Power Apps, React, Angular) plus cross-cutting agents (code-reviewer, architecture-analyst, unit-test-writer, security-reviewer, performance-reviewer, production-safety, quality-gate, build-validator). |
+| `.claude/skills/` | Slash-command workflows (`SKILL.md` each) for recurring tasks: new-feature, code-review, unit-testing, architecture-analysis, build-validation, documentation, qa-test-tracking, performance-review, production-safety-check, quality-gate, and stack-specific workflows (EF Core migrations, Blazor components, SignalR hubs, Power BI embedding, SharePoint/Graph integration, Power Apps connectors, React components, Angular components). |
+| `.claude/commands/` | Explicit, never-auto-triggered routing shortcuts (`/fastfix`, `/safefeature`, `/review`) — distinct from skills, which can auto-trigger. |
 | `templates/` | `CLAUDE.md` templates (full + minimal) for bootstrapping new client projects, plus starter project scaffolds per stack. |
 | `wiki/` | Architecture overviews, per-stack coding standards, integration guides, onboarding guide. |
 | `docs/` | Getting-started, Claude Code setup, security guidelines, FAQ. |

@@ -18,6 +18,8 @@ This is the index for the Dotsquares AI Engineering Platform wiki: architecture 
 | [C# Coding Standards](Coding-Standards-CSharp.md) | General C#/.NET conventions: naming, nullable reference types, async/await rules, DI lifetimes, exception handling policy. |
 | [ASP.NET Core, MVC & Razor Pages Standards](Coding-Standards-AspNetCore-MVC-Razor.md) | Thin controllers, view-model separation, model validation, API versioning, `ProblemDetails` error responses. |
 | [Blazor Standards](Coding-Standards-Blazor.md) | Component design, state management patterns, Server vs. WebAssembly decision criteria, JS interop rules. |
+| [React Standards](Coding-Standards-React.md) | Component design, hooks rules/pitfalls, state-management decision criteria, testing philosophy, security notes. |
+| [Angular Standards](Coding-Standards-Angular.md) | Component/service design, RxJS subscription discipline, forms strategy, testing philosophy, security notes. |
 
 ## Stack & Integration Guides
 

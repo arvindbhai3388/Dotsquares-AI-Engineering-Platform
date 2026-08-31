@@ -5,7 +5,8 @@ description: >
   client project built on it — enforces the full analyze → propose →
   approve → implement → test → review workflow end to end, regardless of
   stack (ASP.NET Core, MVC, Razor Pages, Blazor, Umbraco, EF Core, SQL
-  Server, SignalR, Power BI, SharePoint, Power Apps). Trigger phrases:
+  Server, SignalR, Power BI, SharePoint, Power Apps, React, Angular).
+  Trigger phrases:
   "add a new feature", "implement this requirement", "build this from
   scratch", "add support for X". This is the platform's flagship workflow —
   every feature addition should go through it rather than jumping straight

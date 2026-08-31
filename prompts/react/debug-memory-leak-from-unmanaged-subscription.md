@@ -1,0 +1,17 @@
+# Debug a Memory Leak from an Unmanaged Subscription, Interval, or Event Listener
+
+**Category:** React
+**Use when:** A "Can't perform a React state update on an unmounted component" warning appears, memory grows across navigations in a long-running SPA session, or a listener/timer appears to keep firing after its owning component is gone.
+
+## Prompt
+
+Analyze the component(s) for the usual causes before touching code, and report each specific instance found with file/line references rather than a general statement: a `useEffect` that calls `setInterval`/`setTimeout`, `addEventListener` (on `window`, `document`, or a DOM node), or subscribes to an external store/WebSocket/EventSource/observable, without a matching cleanup in the effect's returned function (`clearInterval`, `clearTimeout`, `removeEventListener`, `unsubscribe`); an async operation (fetch, promise chain) that calls `setState` in its `.then`/after `await` without checking the component is still mounted, so a slow response arriving after unmount tries to update state on a gone component; a ref or closure capturing `this`/a stale callback and registering it with a global singleton (a shared event bus, a global cache) that never gets deregistered because the effect's dependency array causes the subscribe/unsubscribe pair to run unpaired.
+
+For each one found, propose the specific fix rather than a blanket rewrite:
+- Interval/timeout: store the id in a local variable and return a cleanup calling `clearInterval`/`clearTimeout` from the same `useEffect`.
+- Event listener: return a cleanup calling `removeEventListener` with a listener reference that's stable across the effect's lifetime (defined inside the effect, or a stable `useCallback` if it must also be used elsewhere).
+- Subscription (WebSocket, EventSource, external store, RxJS-style observable): call the library's unsubscribe/close method in the cleanup; if using `useSyncExternalStore` for the subscription, confirm the subscribe function itself already returns an unsubscribe function correctly.
+- Async fetch outliving unmount: use an `AbortController`, passing its `signal` into `fetch`, and abort it in the cleanup — or, if the underlying call can't be aborted, use a local `let ignore = false` flag checked before calling `setState`, set to `true` in the cleanup. Do not silence the "unmounted component" warning by swallowing the error without addressing the underlying leak.
+- Global singleton registration outside React's lifecycle (a manually managed listener registry, a shared cache subscriber list): confirm the registration and deregistration are correctly paired to the same identity across re-renders, since a common bug here is registering a new closure on every render while only unregistering the very first one.
+
+If the leak isn't obvious from a static read, propose confirming it with React DevTools' Profiler (or the browser's Memory tab, taking two heap snapshots across repeated mount/unmount cycles of the suspected component and diffing retained instances) before assuming a fix worked — ask for access to reproduce it if it's environment-specific. After the fix, write a test that mounts and unmounts the component and asserts the cleanup happened (e.g. spy on `removeEventListener`/`clearInterval`/the subscription's unsubscribe method and assert it was called on unmount), and confirm no "state update on unmounted component" warning appears in the test console output for an async case if one applies here.

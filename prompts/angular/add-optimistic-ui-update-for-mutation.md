@@ -1,0 +1,14 @@
+# Add an Optimistic UI Update for a Mutation
+
+**Category:** Angular
+**Use when:** A create/update/delete action (e.g. toggling a flag, reordering a list, editing an item) currently waits for the API response before updating the UI, and the perceived lag is worth trading for the added rollback complexity.
+
+## Prompt
+
+Before implementing, confirm this mutation is actually a good fit for optimism — propose the approach and wait for approval rather than assuming yes. It's a good fit when the mutation is very likely to succeed, the change is easy to compute client-side ahead of the server's confirmation (a toggle, a simple field edit, a reorder), and a brief visible "flicker back" on the rare failure case is acceptable UX. It's a poor fit when the server can reject/transform the value in ways the client can't predict (server-computed fields, uniqueness/business-rule validation that commonly fails, financial or otherwise hard-to-reverse actions) — say so if that's the case here instead of implementing optimism anyway.
+
+Implement the update in the shared state service (not ad hoc in the component) so every consumer of that state sees the same optimistic value: capture the current value before mutating (`const previous = this.items()` if state is a signal, or the current emitted value from a `BehaviorSubject`), apply the optimistic change immediately (`this.items.update(list => list.map(...))` or `.next(...)`), then fire the actual HTTP call. On success, reconcile with the server's authoritative response if it differs from the optimistic guess (e.g. a server-assigned ID or timestamp) rather than assuming the optimistic value was exactly right. On error (`catchError` on the HTTP call), roll back to the captured `previous` value and surface the failure to the user (a toast/inline error) so the rollback isn't silent and confusing.
+
+Handle the concurrent-mutation case explicitly: if the same item can be optimistically mutated again before the first mutation's response returns (fast double-click, rapid toggling), decide and implement one clear strategy — queue/serialize mutations per item, disable the control while a mutation for that item is in flight, or use a request-id/version check to discard a stale response's rollback if a newer optimistic update has already superseded it — rather than letting a late-arriving error roll back a change the user already made again since.
+
+Write tests covering: the optimistic value appears in state immediately, before the mocked HTTP call resolves; on success, state reflects the reconciled server value; on failure, state rolls back to the pre-mutation value and an error is surfaced; and the concurrent-mutation strategy behaves as designed (e.g. a second toggle while the first is in flight doesn't get incorrectly rolled back by the first request's later response).

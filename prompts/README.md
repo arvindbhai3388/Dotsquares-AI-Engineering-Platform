@@ -1,6 +1,6 @@
 # Prompt Library
 
-218 copy-paste-ready prompts for Claude Code, organized by stack/category. Every prompt is a self-contained instruction you can paste directly into a Claude Code session on a real client project. Each is written to fit this framework's core discipline:
+250 copy-paste-ready prompts for Claude Code, organized by stack/category. Every prompt is a self-contained instruction you can paste directly into a Claude Code session on a real client project. Each is written to fit this framework's core discipline:
 
 ```
 Analyze → Propose → Approve → Implement → Test → Review
@@ -31,8 +31,10 @@ Most implementation prompts ask Claude to propose an approach and get your sign-
 | Power Apps / Power Platform | [`powerapps/`](powerapps/) | 16 | Dataverse plugins, custom connectors, canvas/model-driven apps, ALM |
 | Code Review & Testing | [`code-review-and-testing/`](code-review-and-testing/) | 21 | xUnit/MSTest/Moq, WebApplicationFactory, security review, flaky tests, coverage |
 | Architecture & Planning | [`architecture-and-planning/`](architecture-and-planning/) | 13 | Implementation plans, ADRs, migration strategy, multi-tenancy design, post-copy integration verification |
+| React | [`react/`](react/) | 16 | Hooks, TanStack Query data-fetching, forms, performance, accessibility, security review |
+| Angular | [`angular/`](angular/) | 16 | Standalone components, signals, RxJS, forms, guards/interceptors, accessibility, security review |
 
-**Total: 218 prompts.**
+**Total: 250 prompts.**
 
 ---
 
@@ -289,3 +291,41 @@ Most implementation prompts ask Claude to propose an approach and get your sign-
 - [evaluate-event-driven-vs-request-response.md](architecture-and-planning/evaluate-event-driven-vs-request-response.md)
 - [produce-onboarding-doc-for-new-developer.md](architecture-and-planning/produce-onboarding-doc-for-new-developer.md)
 - [verify-platform-integration-after-copy.md](architecture-and-planning/verify-platform-integration-after-copy.md)
+
+## React (`react/`)
+
+- [add-new-component-with-typed-props-and-tests.md](react/add-new-component-with-typed-props-and-tests.md)
+- [convert-class-component-to-function-component.md](react/convert-class-component-to-function-component.md)
+- [add-tanstack-query-data-fetching.md](react/add-tanstack-query-data-fetching.md)
+- [fix-stale-closure-in-useeffect.md](react/fix-stale-closure-in-useeffect.md)
+- [add-loading-error-empty-states-to-data-fetching-component.md](react/add-loading-error-empty-states-to-data-fetching-component.md)
+- [add-form-validation-with-react-hook-form-and-zod.md](react/add-form-validation-with-react-hook-form-and-zod.md)
+- [diagnose-unnecessary-rerenders.md](react/diagnose-unnecessary-rerenders.md)
+- [add-route-based-code-splitting.md](react/add-route-based-code-splitting.md)
+- [add-auth-token-interceptor-for-api-calls.md](react/add-auth-token-interceptor-for-api-calls.md)
+- [add-react-testing-library-tests-for-existing-component.md](react/add-react-testing-library-tests-for-existing-component.md)
+- [review-component-for-accessibility-issues.md](react/review-component-for-accessibility-issues.md)
+- [extract-custom-hook-from-duplicated-logic.md](react/extract-custom-hook-from-duplicated-logic.md)
+- [add-optimistic-ui-update-for-mutation.md](react/add-optimistic-ui-update-for-mutation.md)
+- [debug-memory-leak-from-unmanaged-subscription.md](react/debug-memory-leak-from-unmanaged-subscription.md)
+- [add-error-boundary-for-app-section.md](react/add-error-boundary-for-app-section.md)
+- [review-diff-for-react-security-issues.md](react/review-diff-for-react-security-issues.md)
+
+## Angular (`angular/`)
+
+- [add-standalone-component-with-typed-io.md](angular/add-standalone-component-with-typed-io.md)
+- [migrate-ngmodule-component-to-standalone.md](angular/migrate-ngmodule-component-to-standalone.md)
+- [fix-rxjs-subscription-memory-leak.md](angular/fix-rxjs-subscription-memory-leak.md)
+- [add-http-interceptor-for-auth-token.md](angular/add-http-interceptor-for-auth-token.md)
+- [convert-template-driven-form-to-typed-reactive-form.md](angular/convert-template-driven-form-to-typed-reactive-form.md)
+- [diagnose-change-detection-performance-issue.md](angular/diagnose-change-detection-performance-issue.md)
+- [extract-shared-api-service-from-duplicated-logic.md](angular/extract-shared-api-service-from-duplicated-logic.md)
+- [add-route-guards-for-authenticated-section.md](angular/add-route-guards-for-authenticated-section.md)
+- [add-testbed-tests-for-untested-component.md](angular/add-testbed-tests-for-untested-component.md)
+- [add-lazy-loaded-feature-routes.md](angular/add-lazy-loaded-feature-routes.md)
+- [review-component-for-accessibility-issues.md](angular/review-component-for-accessibility-issues.md)
+- [migrate-rxjs-state-to-signals.md](angular/migrate-rxjs-state-to-signals.md)
+- [add-optimistic-ui-update-for-mutation.md](angular/add-optimistic-ui-update-for-mutation.md)
+- [debug-expression-changed-after-checked-error.md](angular/debug-expression-changed-after-checked-error.md)
+- [review-diff-for-angular-security-issues.md](angular/review-diff-for-angular-security-issues.md)
+- [add-custom-rxjs-pipeable-operator.md](angular/add-custom-rxjs-pipeable-operator.md)

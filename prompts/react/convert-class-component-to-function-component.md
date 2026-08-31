@@ -1,0 +1,14 @@
+# Convert a Class Component to a Function Component with Hooks
+
+**Category:** React
+**Use when:** Modernizing a legacy class component before extending it, or as prep work for a larger refactor.
+
+## Prompt
+
+Before changing anything, read the class component fully and inventory everything that needs an equivalent: `this.state` fields, lifecycle methods (`componentDidMount`, `componentDidUpdate`, `componentWillUnmount`, `shouldComponentUpdate`, `getDerivedStateFromProps`, `componentDidCatch`), instance fields/refs (`this.someRef`, cached values), bound event handler methods, and any context consumers (`static contextType` or `<Context.Consumer>`). Propose the hook-by-hook mapping before implementing, especially for any lifecycle combination that doesn't map 1:1 onto `useEffect` — call these out explicitly rather than guessing.
+
+Map state: each independent piece of `this.state` becomes its own `useState` call (don't cram unrelated fields into one state object just to mirror the old shape) unless the fields are always updated together, in which case `useReducer` may be the better match — propose which before implementing. Map lifecycle: `componentDidMount` + `componentWillUnmount` typically become one `useEffect` with a cleanup function and an empty dependency array; `componentDidUpdate` becomes a `useEffect` with the relevant values in its dependency array — be precise about which props/state values belong in that array so the effect doesn't run too often or too rarely (this is the single most common bug introduced during this kind of conversion). `shouldComponentUpdate` maps to wrapping the component in `React.memo` with a custom comparator only if actually needed. `componentDidCatch`/`getDerivedStateFromError` cannot be replaced by a hook — leave error-boundary behavior in a small class wrapper or point out the existing error boundary this component should be nested under instead (see the error-boundary prompt in this category).
+
+Replace bound instance methods with functions defined in the component body (wrapped in `useCallback` only where a stable identity is genuinely required, e.g. passed to a memoized child or an effect dependency array — not by default). Replace instance-field refs (`this.someRef`) with `useRef`. If the component consumed context via `static contextType`, switch to `useContext`. Preserve the component's public prop contract exactly — this is a refactor, not a behavior change — and preserve `displayName` if other code or tests reference it.
+
+Update or write React Testing Library tests that assert the same observable behavior before and after the conversion (render output, effect side-effects like a mounted API call, cleanup on unmount). Run the existing test suite for this component first to confirm it passes against the class version as a baseline, then again after the conversion to confirm no regression.
